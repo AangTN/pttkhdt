@@ -7,6 +7,14 @@ public class ThanhPhanMonAn {
     private String donVi;
     private int soLuong;
     private boolean duocChon;
+    public ThanhPhanMonAn(String IDNguyenLieu, String tenNguyenLieu, String donVi, int soLuong) {
+        this.IDNguyenLieu = IDNguyenLieu.trim();
+        this.tenNguyenLieu = tenNguyenLieu.trim();
+        this.donVi = donVi.trim();
+        this.soLuong = soLuong;
+        duocChon = true;
+        IDMonAn = "";
+    }
     public ThanhPhanMonAn(String IDNguyenLieu, String tenNguyenLieu, String donVi) {
         this.IDNguyenLieu = IDNguyenLieu.trim();
         this.tenNguyenLieu = tenNguyenLieu.trim();

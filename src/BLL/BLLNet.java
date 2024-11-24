@@ -1,6 +1,7 @@
 package BLL;
 import DAO.DAODangNhap;
 import DAO.DAOQuanLy;
+import DTO.ChiTietHoaDon;
 import DTO.DTOBanPhim;
 import DTO.DTOChiTietNguyenLieu;
 import DTO.DTOChuot;
@@ -8,6 +9,8 @@ import DTO.DTOMonAn;
 import DTO.DTONapTien;
 import DTO.DTONguoiDung;
 import DTO.DTONguyenLieu;
+import DTO.HoaDon;
+import DTO.May;
 import DTO.ThanhPhanMonAn;
 
 import java.util.ArrayList;
@@ -158,5 +161,77 @@ public class BLLNet {
             return "Thành công";
         }
         return s;
+    }
+    public String suaThongTinMonAn(String idMon, String tenMonAn, int Gia, String trangThai, String tenCu, ArrayList<ThanhPhanMonAn> danhSachThanhPhan) {
+        String s;
+        if(!tenMonAn.equals(tenCu))
+            if(daoQuanLy.kiemTraTenMonAnDaTonTai(tenMonAn) == true) return "Tên món ăn đã tồn tại";
+        s = daoQuanLy.suaThongTinMonAn(idMon, tenMonAn, Gia, trangThai);
+        if(s.equals("Thành công")) {
+            daoQuanLy.xoaThanhPhanMonAn(idMon);
+            for(int i=0;i<danhSachThanhPhan.size();i++)
+            daoQuanLy.themThanhPhanMonAn(danhSachThanhPhan.get(i).getIDNguyenLieu(), idMon, danhSachThanhPhan.get(i).getSoLuong());
+        }
+        return s;
+    }
+    public ArrayList<ThanhPhanMonAn> layThanhPhanCuaMonAn(String idMon) {
+        return daoQuanLy.layThanhPhanCuaMonAn(idMon);
+    }
+    public ArrayList<ThanhPhanMonAn> layThanhPhanKhongCoCuaMonAn(String idMon) {
+        return daoQuanLy.layThanhPhanKhongCoCuaMonAn(idMon);
+    }
+    public ArrayList<HoaDon> layDanhSachHoaDonChuaDuyet() {
+        return daoQuanLy.layDanhSachHoaDonChuaDuyet();
+    }
+    public ArrayList<HoaDon> layDanhSachHoaDonDaXuLy() {
+        return daoQuanLy.layDanhSachHoaDonDaXuLy();
+    }
+    public ArrayList<HoaDon> timKiemHoaDonChuaDuyet(String noiDung, String truong) {
+        String cauLenh = "";
+        if(truong.equals("Tên tài khoản")) cauLenh = "TK.TenTaiKhoan = '"+noiDung+"'";
+        else cauLenh = "HD.IDMay = '"+noiDung+"'";
+        return daoQuanLy.timKiemHoaDonChuaDuyet(cauLenh);
+    }
+    public ArrayList<HoaDon> timKiemHoaDonDaXuLy(String noiDung, String truong) {
+        String cauLenh = "";
+        if(truong.equals("Tên tài khoản")) cauLenh = "TK.TenTaiKhoan = '"+noiDung+"'";
+        else cauLenh = "HD.IDMay = '"+noiDung+"'";
+        return daoQuanLy.timKiemHoaDonDaXuLy(cauLenh);
+    }
+    public ArrayList<ChiTietHoaDon> layChiTietHoaDonCua(String IDHoaDon) {
+        return daoQuanLy.layChiTietHoaDonCua(IDHoaDon);
+    }
+    public ArrayList<ThanhPhanMonAn> layTongThanhPhanMonAnCuaHoaDon(String idHoaDon) {
+        return daoQuanLy.layTongThanhPhanCuaHoaDon(idHoaDon);
+    }
+    public String huyDonHang(String idHoaDon) {
+        return daoQuanLy.huyDonHang(idHoaDon);
+    }
+    public String duyetDon(String idDon, ArrayList<String> idNguyenLieu, ArrayList<Integer> soLuongSuDung) {
+        for(int i=0;i<idNguyenLieu.size();i++) {
+            String s = daoQuanLy.tangSoLuongSuDungNguyenLieu(idNguyenLieu.get(i), soLuongSuDung.get(i));
+            if(!s.equals("Thành công")) return "Cập nhật chi tiết nguyên liệu thất bại";
+            String s2 = daoQuanLy.capNhatTrangThaiHoaDon(idDon, "Đã duyệt");
+            if(!s2.equals("Thành công")) return "Cập nhật trạng thái hóa đơn thất bại";
+        }
+        return "Thành công";
+    }
+    public ArrayList<May> layDanhSachMayThuong() {
+        ArrayList<May> ds = new ArrayList<>();
+        ds = daoQuanLy.layDanhSachMayThuong();
+        for(int i=0;i<ds.size();i++) {
+            if(!ds.get(i).getTinhTrang().equals("Hư")) {
+                if(daoQuanLy.kiemTraMayCoChuot(ds.get(i).getIDMay()).equals("Không") || daoQuanLy.kiemTraMayCoBanPhim(ds.get(i).getIDMay()).equals("Không")) {
+                    ds.get(i).setTinhTrang("Thiếu thiết bị");
+                }
+                else if(daoQuanLy.kiemTraMayXemChuotCoHu(ds.get(i).getIDMay()).equals("Hư") || daoQuanLy.kiemTraMayXemBanPhimCoHu(ds.get(i).getIDMay()).equals("Hư")) {
+                    ds.get(i).setTinhTrang("Thiết bị hư");
+                } 
+            }
+        }
+        return ds;
+    }
+    public boolean kiemTraMayCoTinNhanMoiKhong(String idMay) {
+        return daoQuanLy.kiemTraMayCoTinNhanMoiKhong(idMay);
     }
 }

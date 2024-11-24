@@ -6,12 +6,20 @@ public class DTOTaiKhoan {
     private String MatKhau;
     private int SoDu;
     private String IDNhomQuyen;
-    public DTOTaiKhoan(String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int soDu, String IDNhomQuyen) {
-        setIDNhomQuyen(IDNhomQuyen);
-        setIDTaiKhoan(IDTaiKhoan);
-        setMatKhau(MatKhau);
+    private String TenNhomQuyen;
+    public DTOTaiKhoan(String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int soDu, String IDNhomQuyen, String TenNhomQuyen) {
+        setIDNhomQuyen(IDNhomQuyen.trim());
+        setIDTaiKhoan(IDTaiKhoan.trim());
+        setMatKhau(MatKhau.trim());
         setSoDu(soDu);
-        setTenTaiKhoan(TenTaiKhoan);
+        setTenTaiKhoan(TenTaiKhoan.trim());
+        setTenNhomQuyen(TenNhomQuyen.trim());
+    }
+    public String getTenNhomQuyen() {
+        return TenNhomQuyen;
+    }
+    public void setTenNhomQuyen(String tenNhomQuyen) {
+        TenNhomQuyen = tenNhomQuyen;
     }
     public void setIDNhomQuyen(String iDNhomQuyen) {
         IDNhomQuyen = iDNhomQuyen;

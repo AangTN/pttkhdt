@@ -7,35 +7,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.ArrayList;
-import BLL.BLLNet;
+
 import DTO.DTOMonAn;
 import DTO.ThanhPhanMonAn;
+import BLL.BLLNet;
 
-public class ThemMonAn extends JFrame {
+public class SuaThongTinMonAn extends JFrame {
     private BLLNet bllNet;
     private JTextField tfTenMon, tfGiaTien;
-    private JLabel lbAnhDaiDien;
-    private JTable bangNguyenLieu;
     private DefaultTableModel model;
     private JRadioButton rbKhoa, rbKhongKhoa;
-    private JButton btnXacNhan;
-    private String hinhAnh = "image/Menu/MonAnMacDinh.jpg";
-
+    private JButton btnLuu;
+    private DTOMonAn monAn;
+    private JLabel lbAnhDaiDien;
+    private JTable bangNguyenLieu;
+    public void setMonAn(DTOMonAn monAn) {
+        this.monAn = monAn;
+    }
     public void setBllNet(BLLNet bllNet) {
         this.bllNet = bllNet;
     }
-    public void setHinhAnh(String hinhAnh) {
-        this.hinhAnh = hinhAnh;
-    }
     private boolean isClosed = false;
     public boolean isClosed() {
-        return isClosed; // Phương thức để kiểm tra trạng thái
+        return isClosed;
     }
-    public ThemMonAn(BLLNet net) {
+    public SuaThongTinMonAn(BLLNet net, DTOMonAn mon) {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -43,43 +42,21 @@ public class ThemMonAn extends JFrame {
             }
         });
         setBllNet(net);
-        setTitle("Thêm Món Ăn");
+        setMonAn(mon);
+        setTitle("Sửa Thông Tin Món Ăn");
         setSize(800, 600);
         setLayout(null);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        getContentPane().setBackground(new Color(240, 240, 240)); // Thay đổi màu nền
 
-        // Ảnh đại diện
-        lbAnhDaiDien = new JLabel(new ImageIcon("image/Menu/MonAnMacDinh.jpg"));
+        // // Load existing data into GUI components
+        ImageIcon img = new ImageIcon(monAn.getHinhAnh());
+        Image scale = img.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+        img.setImage(scale);
+        lbAnhDaiDien = new JLabel(img);
         lbAnhDaiDien.setBounds(10, 10, 200, 200); // Tăng kích thước ảnh
+
         add(lbAnhDaiDien);
-
-        // Nút chỉnh ảnh
-        JButton btnChinhAnh = new JButton("Chỉnh ảnh");
-        btnChinhAnh.setBounds(10, 220, 200, 30);
-        add(btnChinhAnh);
-        btnChinhAnh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Mở hộp thoại chọn ảnh và cập nhật ảnh đại diện
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new File("C:\\Users\\ASUS\\Desktop\\pttkhdt\\Net\\image\\Menu"));
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String fileName = selectedFile.getName(); // Lấy tên file
-                    String newPath = "image/Menu/" + fileName; // Nối với đường dẫn mong muốn
-                    setHinhAnh(newPath);
-                    ImageIcon icon = new ImageIcon(newPath);
-                    Image scale = icon.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT); // Tăng kích thước ảnh
-                    icon.setImage(scale);
-                    lbAnhDaiDien.setIcon(icon);
-                }
-            }
-        });
-
-        // Thông tin món ăn
         JLabel lbTenMon = new JLabel("Tên món:");
         lbTenMon.setBounds(220, 10, 100, 40);
         lbTenMon.setFont(new Font("Arial", Font.BOLD, 16)); // Tăng kích thước phông chữ
@@ -87,6 +64,7 @@ public class ThemMonAn extends JFrame {
 
         tfTenMon = new JTextField();
         tfTenMon.setBounds(300, 10, 450, 30); // Tăng kích thước text field
+        tfTenMon.setText(monAn.getTenMonAn());
         add(tfTenMon);
 
         JLabel lbGiaTien = new JLabel("Giá tiền:");
@@ -96,6 +74,7 @@ public class ThemMonAn extends JFrame {
 
         tfGiaTien = new JTextField();
         tfGiaTien.setBounds(300, 50, 450, 30); // Tăng kích thước text field
+        tfGiaTien.setText(String.valueOf(monAn.getGiaTien()));
         add(tfGiaTien);
 
         // Trạng thái khóa/không khóa
@@ -117,27 +96,31 @@ public class ThemMonAn extends JFrame {
         ButtonGroup bgTrangThai = new ButtonGroup();
         bgTrangThai.add(rbKhoa);
         bgTrangThai.add(rbKhongKhoa);
-        rbKhoa.setSelected(true);
+        
+        if(monAn.getTrangThai().equals("Khóa")) rbKhoa.setSelected(true);
+        else rbKhongKhoa.setSelected(true);
 
-        // Bảng nguyên liệu
+        // Initialize and populate ingredients table
         model = new DefaultTableModel(new Object[]{"Chọn", "Tên Nguyên Liệu", "Đơn Vị", "Số Lượng"}, 0) {
             @Override
             public Class<?> getColumnClass(int column) {
                 return column == 0 ? Boolean.class : String.class;
             }
         };
-
-        ArrayList<ThanhPhanMonAn> dsThanhPhan = bllNet.layThanhPhanMonAnDeThem();
-        for (ThanhPhanMonAn tp : dsThanhPhan) {
-            model.addRow(new Object[]{tp.getDuocChon(), tp.getTenNguyenLieu(), tp.getDonVi(), tp.getSoLuong()});
-        }
-
         bangNguyenLieu = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == 3 && (Boolean) getValueAt(row, 0) || column == 0; // Chỉnh sửa số lượng chỉ khi checkbox được tích
             }
         };
+        ArrayList<ThanhPhanMonAn> dsThanhPhan = bllNet.layThanhPhanCuaMonAn(monAn.getID());
+        dsThanhPhan.addAll(bllNet.layThanhPhanKhongCoCuaMonAn(mon.getID()));
+        for (ThanhPhanMonAn tp : dsThanhPhan) {
+            model.addRow(new Object[]{tp.getDuocChon(), tp.getTenNguyenLieu(), tp.getDonVi(),tp.getSoLuong()});
+        } 
+        if (bangNguyenLieu.isEditing()) {
+            bangNguyenLieu.getCellEditor().stopCellEditing();
+        }       
         bangNguyenLieu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -157,25 +140,21 @@ public class ThemMonAn extends JFrame {
         bangNguyenLieu.setFont(new Font("Arial", Font.PLAIN, 14)); // Tăng kích thước chữ trong bảng
         bangNguyenLieu.setBorder(BorderFactory.createEmptyBorder()); // Bỏ đường viền bảng
         bangNguyenLieu.setShowGrid(false); // Bỏ đường kẻ
-
         JScrollPane scrollPane = new JScrollPane(bangNguyenLieu);
         scrollPane.setBounds(10, 260, 760, 250);
         add(scrollPane);
-
-        // Nút xác nhận
-        btnXacNhan = new JButton("Xác Nhận Thêm");
-        btnXacNhan.setBounds(10, 520, 150, 30);
-        add(btnXacNhan);
-
-        // Hành động khi nhấn nút xác nhận
-        btnXacNhan.addActionListener(new ActionListener() {
+        // Save button action
+        btnLuu = new JButton("Lưu Thay Đổi");
+        btnLuu.setBounds(10, 520, 150, 30);
+        add(btnLuu);
+        btnLuu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String tenMonAn = tfTenMon.getText().trim();
+                int giaTien;
                 if (bangNguyenLieu.isEditing()) {
                     bangNguyenLieu.getCellEditor().stopCellEditing();
                 }       
-                String tenMonAn = tfTenMon.getText().trim();
-                int giaTien;
                 try {
                     giaTien = Integer.parseInt((String)tfGiaTien.getText());
                 } catch (Exception er) {
@@ -185,8 +164,8 @@ public class ThemMonAn extends JFrame {
                 String trangThai;
                 if(rbKhoa.isSelected()) trangThai = "Khóa";
                 else trangThai = "Không khóa";
-                DTOMonAn monAn = new DTOMonAn("NULL", tenMonAn, giaTien, hinhAnh, trangThai);
-                String kiemTraThongTinMonAn = monAn.kiemTraHopLeMonAn();
+                DTOMonAn monAnCon = new DTOMonAn("NULL", tenMonAn, giaTien, monAn.getHinhAnh(), trangThai);
+                String kiemTraThongTinMonAn = monAnCon.kiemTraHopLeMonAn();
                 if(!kiemTraThongTinMonAn.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, kiemTraThongTinMonAn);
                     return;
@@ -200,15 +179,13 @@ public class ThemMonAn extends JFrame {
                         String donVi = (String) bangNguyenLieu.getValueAt(i, 2);
                         int soLuongNguyenLieu ;
                         try {
-                            String strSoLuong = (String) bangNguyenLieu.getValueAt(i, 3);
-                            soLuongNguyenLieu = Integer.valueOf(strSoLuong); // Ép kiểu về Integer
+                            String strSoLuong = bangNguyenLieu.getValueAt(i, 3) != null ? bangNguyenLieu.getValueAt(i, 3).toString().trim() : "";
+                            soLuongNguyenLieu = Integer.parseInt(strSoLuong);
                         } catch (Exception er) {
-                            JOptionPane.showMessageDialog(null,"Số lượng thành phần là số");
+                            JOptionPane.showMessageDialog(null,"Số lượng phải là số");
                             return;
                         }
-                        ThanhPhanMonAn thanhPhan = new ThanhPhanMonAn(dsThanhPhan.get(i).getIDNguyenLieu(), ten, donVi);
-                        thanhPhan.setSoLuong(soLuongNguyenLieu);
-                        thanhPhan.setDuocChon(true);
+                        ThanhPhanMonAn thanhPhan = new ThanhPhanMonAn(dsThanhPhan.get(i).getIDNguyenLieu(), ten, donVi, soLuongNguyenLieu);
                         String kiemTraThanhPhanMonAn = thanhPhan.kiemTraHopLeThanhPhanMonAn();
                         if(!kiemTraThanhPhanMonAn.equals("Hợp lệ")) {
                             JOptionPane.showMessageDialog(null, kiemTraThanhPhanMonAn);
@@ -217,14 +194,9 @@ public class ThemMonAn extends JFrame {
                         dsThanhPhanDuocThem.add(thanhPhan); // Thêm vào danh sách mới nếu cần
                     }
                 }
-                JOptionPane.showMessageDialog(null, bllNet.themMonAn(monAn, dsThanhPhanDuocThem));
+                JOptionPane.showMessageDialog(null, bllNet.suaThongTinMonAn(monAn.getID(), monAnCon.getTenMonAn(), monAnCon.getGiaTien(),monAnCon.getTrangThai(),monAn.getTenMonAn(),dsThanhPhanDuocThem));
             }
         });
-
         setVisible(true);
-    }
-
-    public static void main(String args[]) {
-        new ThemMonAn(new BLLNet());
     }
 }

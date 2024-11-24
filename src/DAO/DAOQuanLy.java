@@ -3,6 +3,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import DTO.ChiTietHoaDon;
 import DTO.DTOBanPhim;
 import DTO.DTOChiTietNguyenLieu;
 import DTO.DTOChuot;
@@ -10,6 +11,8 @@ import DTO.DTOMonAn;
 import DTO.DTONapTien;
 import DTO.DTONguoiDung;
 import DTO.DTONguyenLieu;
+import DTO.HoaDon;
+import DTO.May;
 import DTO.ThanhPhanMonAn;
 public class DAOQuanLy {
     private Connection con;
@@ -620,9 +623,9 @@ public class DAOQuanLy {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             
             // Thiết lập các tham số cho PreparedStatement
-            pstmt.setString(1, banPhim.getTenBanPhim());
-            if(banPhim.getIDMay().equals("NULL")) pstmt.setNull(2, java.sql.Types.NCHAR);
-            else pstmt.setString(2, banPhim.getIDMay());
+            pstmt.setString(1, banPhim.getTen());
+            if(banPhim.getIdMay().equals("NULL")) pstmt.setNull(2, java.sql.Types.NCHAR);
+            else pstmt.setString(2, banPhim.getIdMay());
             pstmt.setString(3, banPhim.getLed());
             pstmt.setString(4, banPhim.getTinhTrang());
             pstmt.setString(5, banPhim.getHinhAnh());
@@ -647,7 +650,7 @@ public class DAOQuanLy {
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, banPhim.getIDBanPhim());
-            pstmt.setString(2, banPhim.getTenBanPhim());
+            pstmt.setString(2, banPhim.getTen());
     
             // Gán trực tiếp giá trị NULL cho IDMay và MoTa
             pstmt.setNull(3, Types.NCHAR); // IDMay là NULL
@@ -778,7 +781,7 @@ public class DAOQuanLy {
             PreparedStatement stmt = con.prepareStatement(truyVan);
             for (int i = 0; i < soLuong; i++) {
                 stmt.setString(1, String.valueOf(ma));  // Set IDBanPhim, and increment ma for each new ban phim
-                stmt.setString(2, banPhim.getTenBanPhim());
+                stmt.setString(2, banPhim.getTen());
                 stmt.setNull(3, Types.NCHAR); // IDMay is NULL as per your requirements
                 stmt.setString(4, banPhim.getLed());
                 stmt.setString(5, banPhim.getTinhTrang());
@@ -1026,6 +1029,23 @@ public class DAOQuanLy {
         }
         return ds;
     }
+    public ArrayList<ThanhPhanMonAn> layThanhPhanMonAnCuaMon(String idMonAn) {
+        String truyVan = "SELECT * FROM NguyenLieu NL, ThanhPhanMonAn TPMN WHERE TPMN.IDMon = ?";
+        ArrayList<ThanhPhanMonAn> ds =  new ArrayList<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMonAn);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ThanhPhanMonAn a = new ThanhPhanMonAn(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi"));
+                a.setIDMonAn(idMonAn);
+                a.setSoLuong(rs.getInt("SoLuong"));
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn layThanhPhanMonAnDeThem: " + e.getMessage());
+        }
+        return ds;
+    }
     public String themThanhPhanMonAn(String IDNguyenLieu, String IDMonAn, int soLuong) {
         String truyVan = "INSERT INTO ThanhPhanMonAn (IDMon, IDNguyenLieu, SoLuong) VALUES (?, ?, ?)";
         try {
@@ -1086,4 +1106,317 @@ public class DAOQuanLy {
         }
         return "Thất bại"; // Trả về "Thất bại" nếu thêm thất bại
     }    
+    public String suaThongTinMonAn(String IDMon ,String tenMon, int gia, String trangThai) {
+        String truyVan = "UPDATE Menu SET TenMon = ?, GiaTien = ?, TrangThai = ? WHERE IDMon = ?";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, tenMon);
+            stmt.setInt(2, gia);
+            stmt.setString(3, trangThai);
+            stmt.setString(4, IDMon);
+            if(stmt.executeUpdate() > 0) return "Thành công" ;
+        } catch (Exception e) {
+            return "suaThongTinMonAn " + e.getMessage();
+        }
+        return "Thất bại";
+    }
+    public ArrayList<ThanhPhanMonAn> layThanhPhanCuaMonAn(String idMon) {
+        String truyVan = "SELECT * FROM ThanhPhanMonAn TPMN, NguyenLieu NL WHERE TPMN.IDNguyenLieu = NL.IDNguyenLieu AND TPMN.IDMon = ?";
+        ArrayList<ThanhPhanMonAn> ds = new ArrayList<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMon);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next())
+            ds.add(new ThanhPhanMonAn(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi"),rs.getInt("SoLuong")));
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn layThanhPhanCuaMonAn: " + e.getMessage());
+        }
+        return ds;
+    }
+    public ArrayList<ThanhPhanMonAn> layThanhPhanKhongCoCuaMonAn(String idMon) {
+        String truyVan =    "SELECT * "+
+                            "FROM NguyenLieu NL "+ 
+                            "WHERE NL.IDNguyenLieu NOT IN ( "+
+	                        "SELECT NL2.IDNguyenLieu "+
+	                        "FROM NguyenLieu NL2, ThanhPhanMonAn TPMA "+
+	                        "WHERE NL2.IDNguyenLieu = TPMA.IDNguyenLieu AND TPMA.IDMon = ? "+
+                            ")";
+        ArrayList<ThanhPhanMonAn> ds = new ArrayList<>();
+        System.out.println(truyVan);
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMon);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                ds.add(new ThanhPhanMonAn(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi")));
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn layThanhPhanCuaMonAn: " + e.getMessage());
+        }
+        return ds;
+    }
+    public String xoaThanhPhanMonAn(String idMonAn) {
+        String truyVan = "DELETE FROM ThanhPhanMonAn WHERE IDMon = '" + idMonAn + "'";
+        try {
+            Statement stmt = con.createStatement();
+            if(stmt.executeUpdate(truyVan) > 0) return "Thành công"; 
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn xoaThanhPhanMonAn: " + e.getMessage());
+        }
+        return "Thất bại";
+    }
+    public ArrayList<HoaDon> layDanhSachHoaDonChuaDuyet() {
+        ArrayList<HoaDon> ds = new ArrayList<>();
+        String truyVan ="SELECT HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan, SUM(CTHD.GiaTien * CTHD.SoLuong) AS DonGia " +
+                        "FROM HoaDon HD, ChiTietHoaDon CTHD, TaiKhoan TK " +
+                        "Where HD.IDHoaDon = CTHD.IDHoaDon and HD.IDTaiKhoan = TK.IDTaiKhoan and HD.TrangThai = N'Chưa duyệt'" +
+                        "GROUP BY HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan";
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(truyVan);
+            while(rs.next())
+            ds.add(new HoaDon(rs.getString("IDHoaDon"), rs.getString("IDTaiKhoan"), rs.getDate("ThoiGian"),rs.getString("TrangThai"), rs.getString("IDMay"), rs.getString("TenTaiKhoan"), rs.getInt("DonGia")));
+        } catch (Exception e) {
+            System.out.println("layDanhSachHoaDonChuaDuyet " + e);
+        }
+        return ds;
+    }
+    public ArrayList<HoaDon> layDanhSachHoaDonDaXuLy() {
+        ArrayList<HoaDon> ds = new ArrayList<>();
+        String truyVan ="SELECT HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan, SUM(CTHD.GiaTien * CTHD.SoLuong) AS DonGia " +
+                        "FROM HoaDon HD, ChiTietHoaDon CTHD, TaiKhoan TK " +
+                        "Where HD.IDHoaDon = CTHD.IDHoaDon and HD.IDTaiKhoan = TK.IDTaiKhoan and HD.TrangThai != N'Chưa duyệt'" +
+                        "GROUP BY HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan";
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(truyVan);
+            while(rs.next())
+            ds.add(new HoaDon(rs.getString("IDHoaDon"), rs.getString("IDTaiKhoan"), rs.getDate("ThoiGian"),rs.getString("TrangThai"), rs.getString("IDMay"), rs.getString("TenTaiKhoan"), rs.getInt("DonGia")));
+        } catch (Exception e) {
+            System.out.println("layDanhSachHoaDonDaXuLy " + e);
+        }
+        return ds;
+    }
+    public ArrayList<HoaDon> timKiemHoaDonChuaDuyet(String cauLenh) {
+        ArrayList<HoaDon> ds = new ArrayList<>();
+        String truyVan ="SELECT HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan, SUM(CTHD.GiaTien * CTHD.SoLuong) AS DonGia " +
+                        "FROM HoaDon HD, ChiTietHoaDon CTHD, TaiKhoan TK " +
+                        "Where HD.IDHoaDon = CTHD.IDHoaDon and HD.IDTaiKhoan = TK.IDTaiKhoan and HD.TrangThai = N'Chưa duyệt' AND " + cauLenh +" "+ 
+                        "GROUP BY HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan";
+        try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(truyVan);
+                while(rs.next())
+                ds.add(new HoaDon(rs.getString("IDHoaDon"), rs.getString("IDTaiKhoan"), rs.getDate("ThoiGian"),rs.getString("TrangThai"), rs.getString("IDMay"), rs.getString("TenTaiKhoan"), rs.getInt("DonGia")));
+            } catch (Exception e) {
+                System.out.println("timKiemHoaDonChuaDuyet " + e);
+            }
+        return ds;
+    }
+    public ArrayList<HoaDon> timKiemHoaDonDaXuLy(String cauLenh) {
+        ArrayList<HoaDon> ds = new ArrayList<>();
+        String truyVan ="SELECT HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan, SUM(CTHD.GiaTien * CTHD.SoLuong) AS DonGia " +
+                        "FROM HoaDon HD, ChiTietHoaDon CTHD, TaiKhoan TK " +
+                        "Where HD.IDHoaDon = CTHD.IDHoaDon and HD.IDTaiKhoan = TK.IDTaiKhoan and HD.TrangThai != N'Chưa duyệt' AND " + cauLenh +" "+ 
+                        "GROUP BY HD.IDHoaDon, HD.IDTaiKhoan, HD.ThoiGian, HD.IDMay, HD.TrangThai, TK.TenTaiKhoan";
+        try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(truyVan);
+                while(rs.next())
+                ds.add(new HoaDon(rs.getString("IDHoaDon"), rs.getString("IDTaiKhoan"), rs.getDate("ThoiGian"),rs.getString("TrangThai"), rs.getString("IDMay"), rs.getString("TenTaiKhoan"), rs.getInt("DonGia")));
+            } catch (Exception e) {
+                System.out.println("timKiemHoaDonDaXuLy " + e);
+            }
+        return ds;
+    }
+    public ArrayList<ChiTietHoaDon> layChiTietHoaDonCua(String IDHoaDon) {
+        ArrayList<ChiTietHoaDon> ds = new ArrayList<>();
+        String truyVan = " SELECT CTHD.IDMon, CTHD.IDHoaDon, MN.TenMon, CTHD.GiaTien, CTHD.SoLuong  FROM ChiTietHoaDon CTHD, Menu MN WHERE IDHoaDon = ? AND CTHD.IDMon = MN.IDMon";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, IDHoaDon);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            ds.add(new ChiTietHoaDon(rs.getString("IDHoaDon"), rs.getString("IDMon"), rs.getString("TenMon"), rs.getInt("SoLuong"), rs.getInt("GiaTien")));
+        } catch (Exception e) {
+            System.out.println("layChiTietHoaDonCua " + e);
+        }
+        return ds;
+    }
+    public ArrayList<ThanhPhanMonAn> layTongThanhPhanCuaHoaDon(String idHoaDon) {
+        ArrayList<ThanhPhanMonAn> ds = new ArrayList<>();
+        String truyVan ="SELECT TenNguyenLieu, DonVi, NL.IDNguyenLieu, SUM(TPMA.SoLuong * CTHD.SoLuong) as SoLuong " +
+                        "FROM ChiTietHoaDon CTHD, Menu MN, ThanhPhanMonAn TPMA, NguyenLieu NL " +
+                        "WHERE CTHD.IDMon = MN.IDMon AND MN.IDMon = TPMA.IDMon AND TPMA.IDNguyenLieu = NL.IDNguyenLieu AND CTHD.IDHoaDon = ? " +
+                        "GROUP BY TenNguyenLieu, DonVi, NL.IDNguyenLieu";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idHoaDon);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ds.add(new ThanhPhanMonAn(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi"),rs.getInt("SoLuong")));
+            }
+        } catch (Exception e) {
+            System.out.println("layTongThanhPhanCuaHoaDon " + e);
+        }
+        return ds;
+    } 
+    public String huyDonHang(String idHoaDon) {
+        String truyVan = "UPDATE HoaDon SET TrangThai = N'Đã hủy' WHERE IDHoaDon = ?";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1,idHoaDon);
+            if(stmt.executeUpdate() > 0) return "Thành công";
+        } catch (Exception e) {
+            System.out.println("huyDonHan " + e);
+        }
+        return "Lỗi mở truy vấn";
+    }
+    public String tangSoLuongSuDungNguyenLieu(String idNguyenLieu, int soLuongTang) {
+        String truyVan= "SELECT TOP 1 * " +
+                        "FROM ChiTietNguyenLieu " +
+                        "WHERE DaSuDung < SoLuong AND DATEADD(DAY, HanSuDung, NgayNhap) >= GETDATE() AND IDNguyenLieu = ? " +
+                        "ORDER BY DATEADD(DAY, HanSuDung, NgayNhap) ASC ";
+        try {
+            while (soLuongTang != 0) {
+                PreparedStatement stmt = con.prepareStatement(truyVan);
+                stmt.setString(1, idNguyenLieu);
+                ResultSet rs = stmt.executeQuery();
+                if(!rs.next()) return "Thất bại";
+                int soLuong = rs.getInt("SoLuong");
+                int daSuDung = rs.getInt("DaSuDung");
+                int conLai =  soLuong - daSuDung;
+                String id = rs.getString("ID");
+                int min;
+                if(conLai < soLuongTang) min = conLai;
+                else  min = soLuongTang;
+                String capNhat ="UPDATE ChiTietNguyenLieu " + 
+                                "SET DaSuDung = DaSuDung + ? " + 
+                                "WHERE ID = ?";
+
+                PreparedStatement stmt2 = con.prepareStatement(capNhat);
+                stmt2.setInt(1, min);
+                stmt2.setString(2, id);
+                if(stmt2.executeUpdate() < 0) return "Thất bại";
+                else soLuongTang -= min;
+            }
+        } catch (Exception e) {
+            System.out.println("tangSoLuongSuDungNguyenLieu " + e);
+        }
+        return "Thành công";
+    }
+    public String capNhatTrangThaiHoaDon(String idHoaDon,String trangThai) {
+        String truyVan = "UPDATE HoaDon SET TrangThai = ? WHERE IDHoaDon = ?";
+        try {
+            PreparedStatement stmt =con.prepareStatement(truyVan);
+            stmt.setString(1, trangThai);
+            stmt.setString(2, idHoaDon);
+            if(stmt.executeUpdate() > 0) return "Thành công";
+        } catch (Exception e) {
+            System.out.println("capNhatTrangThaiHoaDon " + e);
+        }
+        return "Thất bại";
+    }
+    public ArrayList<May> layDanhSachMayThuong() {
+        ArrayList<May> ds = new ArrayList<>();
+        String truyVan = "SELECT * FROM May WHERE LoaiMay = N'Thường'";
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(truyVan);
+            while (rs.next()) {
+                ds.add(new May(
+                rs.getString("IDMay"),
+                rs.getString("LoaiMay"),
+                rs.getInt("GiaChoi"),
+                rs.getString("IDNguoiDung"),
+                rs.getString("CPU"),
+                rs.getString("Ram"),
+                rs.getString("GPU"),
+                rs.getString("TinhTrang"),
+                rs.getString("TrangThai"),
+                rs.getString("MoTa")
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("layDanhSachMay " + e);
+        }
+        return ds;
+    }
+    public String kiemTraMayXemChuotCoHu(String idMay) {
+        String truyVan = "SELECT * FROM May M, Chuot C WHERE M.IDMay = ? AND C.IDMay = M.IDMay AND C.TinhTrang = N'Hư' ";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMay);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) return "Hư";
+        } catch (Exception e) {
+            System.out.println("kiemTraMayXemChuotCoHu " + e);
+        }
+        return "Tốt";
+    }
+    public String kiemTraMayXemBanPhimCoHu(String idMay) {
+        String truyVan = "SELECT * FROM May M, BanPhim BP WHERE M.IDMay = ? AND BP.IDMay = M.IDMay AND BP.TinhTrang = N'Hư' ";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMay);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) return "Hư";
+        } catch (Exception e) {
+            System.out.println("kiemTraMayXemBanPhimCoHu " + e);
+        }
+        return "Tốt";
+    }
+    public String timTenTaiKhoanCuaID(String id) {
+        String truyVan = "SELECT * FROM TaiKhoan WHERE IDTaiKhoan = ?";
+        String tenTaiKhoan="";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) tenTaiKhoan = rs.getString("TenTaiKhoan");
+        } catch (Exception e) {
+            System.out.println("timTenTaiKhoanCuaID " + e);
+        }
+        return tenTaiKhoan;
+    }
+    public boolean kiemTraMayCoTinNhanMoiKhong(String idMay) {
+        String truyVan = "SELECT * FROM TinNhan WHERE IDMay = ? AND TrangThai = N'Chưa xem'";
+        boolean s = false;
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMay);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) s = true;
+        } catch (Exception e) {
+            System.out.println("kiemTraMayCoTinNhanMoiKhong " + e);
+        }
+        return s;
+    }
+    public String kiemTraMayCoChuot(String idMay) {
+        String truyVan = "SELECT * FROM Chuot WHERE IDMay = ?";
+        String s = "Không";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMay);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) s = "Có";
+        } catch (Exception e) {
+            System.out.println("kiemTraMayCoChuot " + e);
+        }
+        return s;
+    }
+    public String kiemTraMayCoBanPhim(String idMay) {
+        String truyVan = "SELECT * FROM BanPhim WHERE IDMay = ?";
+        String s = "Không";
+        try {
+            PreparedStatement stmt = con.prepareStatement(truyVan);
+            stmt.setString(1, idMay);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) s = "Có";
+        } catch (Exception e) {
+            System.out.println("kiemTraMayCoBanPhim " + e);
+        }
+        return s;
+    }
 }

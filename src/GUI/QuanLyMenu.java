@@ -2,10 +2,13 @@ package GUI;
 
 import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -15,9 +18,12 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import BLL.BLLNet;
 import DTO.DTOMonAn;
+import DTO.ThanhPhanMonAn;
 
 public class QuanLyMenu extends JPanel {
     private JPanel pnMenu;
@@ -111,6 +117,12 @@ public class QuanLyMenu extends JPanel {
         themThongTinBang();
         bang.getColumnModel().getColumn(0).setPreferredWidth(1);
 
+        bang.addMouseListener(new MouseAdapter() {
+           public void mouseClicked(MouseEvent e) {
+                int row = bang.getSelectedRow();
+                if(row>=0) thongTinChiTietMonAn(row);
+           } 
+        });
         JScrollPane scrollPane = new JScrollPane(bang);
         scrollPane.setBounds(10, 100, 700, 735);
         pnMenu.add(scrollPane);
@@ -130,5 +142,103 @@ public class QuanLyMenu extends JPanel {
                 dsMonAn.get(i).getGiaTien()
             });
         }
+    }
+    public void thongTinChiTietMonAn(int row) {
+        pnThongTin.removeAll();
+    
+        // Lấy thông tin từ dsMonAn dựa vào hàng (row) được chọn
+        DTOMonAn monAn = dsMonAn.get(row);
+    
+        // Hiển thị ảnh món ăn
+        ImageIcon icon = new ImageIcon(monAn.getHinhAnh().trim());
+        Image scale = icon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
+        icon.setImage(scale);
+        JLabel lbImage = new JLabel(icon);
+        lbImage.setBounds(0, 0, 300, 200);
+        pnThongTin.add(lbImage);
+    
+        // Hiển thị tên món ăn
+        JLabel lbTenMonAn = new JLabel("Tên món: " + monAn.getTenMonAn().trim());
+        lbTenMonAn.setFont(new Font("Arial", Font.BOLD, 20));
+        lbTenMonAn.setBounds(310, 50, 300, 30);
+        pnThongTin.add(lbTenMonAn);
+    
+        // Hiển thị giá món ăn
+        JLabel lbGiaTien = new JLabel("Giá tiền: " + monAn.getGiaTien() + " VNĐ");
+        lbGiaTien.setFont(new Font("Arial", Font.BOLD, 20));
+        lbGiaTien.setBounds(310, 100, 300, 30);
+        pnThongTin.add(lbGiaTien);
+    
+        // Tạo các nút radio cho trạng thái
+        JRadioButton rbKhoa = new JRadioButton("Khóa");
+        rbKhoa.setBounds(310, 150, 100, 30);
+        pnThongTin.add(rbKhoa);
+    
+        JRadioButton rbKhongKhoa = new JRadioButton("Không khóa");
+        rbKhongKhoa.setBounds(420, 150, 120, 30);
+        pnThongTin.add(rbKhongKhoa);
+    
+        // Nhóm các nút radio để chỉ có một nút được chọn tại một thời điểm
+        ButtonGroup group = new ButtonGroup();
+        group.add(rbKhoa);
+        group.add(rbKhongKhoa);
+    
+        // Đặt trạng thái ban đầu dựa trên thông tin của món ăn
+        if (monAn.getTrangThai().equals("Khóa")) {
+            rbKhoa.setSelected(true);
+        } else {
+            rbKhongKhoa.setSelected(true);
+        }
+    
+        // Tiêu đề cho bảng thành phần nguyên liệu
+        JLabel lbTitle = new JLabel("Thành phần nguyên liệu món ăn");
+        lbTitle.setFont(new Font("Arial", Font.BOLD, 22));
+        lbTitle.setBounds(50, 230, 600, 30);
+        pnThongTin.add(lbTitle);
+    
+        // Lấy danh sách thành phần nguyên liệu
+        ArrayList<ThanhPhanMonAn> dsThanhPhan = bllNet.layThanhPhanCuaMonAn(monAn.getID());
+    
+        // Tạo model cho bảng thành phần nguyên liệu
+        DefaultTableModel modelThanhPhan = new DefaultTableModel(new Object[]{"Tên nguyên liệu", "Đơn vị", "Số lượng"}, 0);
+        for (ThanhPhanMonAn tp : dsThanhPhan) {
+            modelThanhPhan.addRow(new Object[]{tp.getTenNguyenLieu(), tp.getDonVi(), tp.getSoLuong()});
+        }
+    
+        // Tạo JTable và JScrollPane cho bảng thành phần nguyên liệu
+        JTable bangThanhPhanMonAn = new JTable(modelThanhPhan);
+        bangThanhPhanMonAn.setRowHeight(35);
+        bangThanhPhanMonAn.setFont(new Font("Arial", Font.PLAIN, 18));
+        bangThanhPhanMonAn.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+    
+        // Đặt màu nền của scrollPane và làm cho bảng chiếm gần hết chiều rộng của pnThongTin
+        JScrollPane scrollPane = new JScrollPane(bangThanhPhanMonAn);
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setBounds(20, 270, pnThongTin.getWidth() - 40, 300);
+        pnThongTin.add(scrollPane);
+    
+        JButton btSua = new JButton("Sửa thông tin");
+        btSua.setBounds(20, 590, 680, 50);
+        btSua.setBackground(Color.WHITE);
+        pnThongTin.add(btSua);
+        btSua.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SuaThongTinMonAn g = new SuaThongTinMonAn(bllNet, monAn);
+                new Thread(() -> {
+                    while (!g.isClosed()) {
+                        try {
+                            Thread.sleep(100); // Kiểm tra mỗi 100ms
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    thongTinChiTietMonAn(row);
+                    // Cập nhật bảng hoặc thực hiện các hành động khác ở đây
+                }).start();
+            }
+        });
+        // Cập nhật giao diện
+        pnThongTin.revalidate();
+        pnThongTin.repaint();
     }
 }

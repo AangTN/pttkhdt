@@ -418,7 +418,7 @@ public class QuanLyThietBi extends JPanel {
                 }
                 String IDBanPhim = modelBanPhim.getValueAt(row, 0).toString();
                 String s =  bllNet.xoaBanPhim(IDBanPhim);
-                String maMay = danhSachBanPhim.get(row).getIDMay();
+                String maMay = danhSachBanPhim.get(row).getIdMay();
                 if(!maMay.equals("")||!maMay.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Bàn phím đang được sử dụng");
                     return;
@@ -442,7 +442,7 @@ public class QuanLyThietBi extends JPanel {
     public void veBangBanPhim() {
         modelBanPhim.setRowCount(0);
         for(int i=0;i<danhSachBanPhim.size();i++)
-        modelBanPhim.addRow(new Object[]{danhSachBanPhim.get(i).getIDBanPhim(),danhSachBanPhim.get(i).getTenBanPhim(),danhSachBanPhim.get(i).getLed(),danhSachBanPhim.get(i).getTinhTrang()});
+        modelBanPhim.addRow(new Object[]{danhSachBanPhim.get(i).getIDBanPhim(),danhSachBanPhim.get(i).getTen(),danhSachBanPhim.get(i).getLed(),danhSachBanPhim.get(i).getTinhTrang()});
     }
     public void thongTinBanPhim(DTOBanPhim banPhim) {
         // Xóa tất cả các thành phần cũ trong panel pnThongTin
@@ -462,7 +462,7 @@ public class QuanLyThietBi extends JPanel {
         // Tạo JLabel và JTextField cho các thuộc tính bàn phím
         JLabel lbTenBanPhim = new JLabel("Tên bàn phím: ");
         lbTenBanPhim.setFont(new Font("Arial", Font.PLAIN, 18));
-        JTextField tfTenBanPhim = new JTextField(banPhim.getTenBanPhim());
+        JTextField tfTenBanPhim = new JTextField(banPhim.getTen());
         tfTenBanPhim.setBounds(210, yPosition, 200, 30);
     
         // Tạo JLabel cho đèn LED
@@ -515,7 +515,7 @@ public class QuanLyThietBi extends JPanel {
         // Tạo JLabel và JTextField cho ID máy
         JLabel lbIDMay = new JLabel("Máy đang sử dụng: ");
         lbIDMay.setFont(new Font("Arial", Font.PLAIN, 18));
-        JTextField tfIDMay = new JTextField(banPhim.getIDMay());
+        JTextField tfIDMay = new JTextField(banPhim.getIdMay());
         tfIDMay.setBounds(210, yPosition + 118, 180, 30);
         tfIDMay.setEnabled(false);
     

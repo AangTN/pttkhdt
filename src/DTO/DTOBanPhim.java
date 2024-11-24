@@ -1,91 +1,86 @@
 package DTO;
-public class DTOBanPhim {
-    private String IDBanPhim;
-    private String TenBanPhim;
-    private String IDMay;
+public class DTOBanPhim extends ThietBi {
     private String Led;
-    private String TinhTrang;
-    private String HinhAnh;
-    private String MoTa;
-
     // Constructor with parameters
     public DTOBanPhim(String IDBanPhim, String TenBanPhim, String IDMay, String Led, String TinhTrang, String HinhAnh, String MoTa) {
-        this.IDBanPhim = IDBanPhim;
-        this.TenBanPhim = TenBanPhim;
-        this.IDMay = IDMay;
+        super(IDBanPhim, TenBanPhim, TinhTrang, IDMay, HinhAnh, MoTa);
         this.Led = Led;
-        this.TinhTrang = TinhTrang;
-        this.HinhAnh = HinhAnh;
-        this.MoTa = MoTa;
     }
 
     // Getter and Setter methods
     public String getIDBanPhim() {
-        return IDBanPhim;
+        return id;
     }
 
     public void setIDBanPhim(String IDBanPhim) {
-        this.IDBanPhim = IDBanPhim;
+        this.id = IDBanPhim;
     }
 
-    public String getTenBanPhim() {
-        return TenBanPhim;
+    @Override
+    public String getHinhAnh() {
+        return super.getHinhAnh();
     }
-
-    public void setTenBanPhim(String TenBanPhim) {
-        this.TenBanPhim = TenBanPhim;
+    @Override
+    public String getId() {
+        return super.getId();
     }
-
-    public String getIDMay() {
-        return IDMay;
+    @Override
+    public String getIdMay() {
+        return super.getIdMay();
     }
-
-    public void setIDMay(String IDMay) {
-        this.IDMay = IDMay;
+    @Override
+    public String getMoTa() {
+        return super.getMoTa();
     }
-
+    @Override
+    public String getTen() {
+        return super.getTen();
+    }
+    @Override
+    public String getTinhTrang() {
+        return super.getTinhTrang();
+    }
     public String getLed() {
         return Led;
     }
-
-    public void setLed(String Led) {
-        this.Led = Led;
+    @Override
+    public void setHinhAnh(String hinhAnh) {
+        super.setHinhAnh(hinhAnh);
     }
-
-    public String getTinhTrang() {
-        return TinhTrang;
+    @Override
+    public void setId(String id) {
+        super.setId(id);
     }
-
-    public void setTinhTrang(String TinhTrang) {
-        this.TinhTrang = TinhTrang;
+    @Override
+    public void setIdMay(String idMay) {
+        super.setIdMay(idMay);
     }
-
-    public String getHinhAnh() {
-        return HinhAnh;
+    @Override
+    public void setMoTa(String moTa) {
+        super.setMoTa(moTa);
     }
-
-    public void setHinhAnh(String HinhAnh) {
-        this.HinhAnh = HinhAnh;
+    @Override
+    public void setTen(String ten) {
+        super.setTen(ten);
     }
-
-    public String getMoTa() {
-        return MoTa;
+    @Override
+    public void setTinhTrang(String tinhTrang) {
+        super.setTinhTrang(tinhTrang);
     }
-
-    public void setMoTa(String MoTa) {
-        this.MoTa = MoTa;
+    public void setLed(String led) {
+        Led = led;
     }
     public String kiemTraDuLieu() {
         // Kiểm tra ID bàn phím
         // Kiểm tra tên bàn phím
-        if (TenBanPhim == null || TenBanPhim.trim().isEmpty()) {
+        if (ten == null || ten.trim().isEmpty()) {
             return "Tên bàn phím không được để trống.";
         }
-        if (TenBanPhim.length() > 30) {
+        if (ten.length() > 30) {
             return "Tên bàn phím không được vượt quá 30 ký tự.";
         }
-        if (IDMay == null || IDMay.isEmpty()) {
-            IDMay = "NULL";
+        if (id == null || id.isEmpty()) {
+            id = "NULL";
         }
         // Kiểm tra đèn LED
         if (Led == null || Led.isEmpty()) {
@@ -93,17 +88,17 @@ public class DTOBanPhim {
         }
         
         // Kiểm tra đường dẫn hình ảnh
-        if (HinhAnh == null || HinhAnh.trim().isEmpty()) {
-            HinhAnh = "image/BanPhim/banPhimMacDinh,png.png";
+        if (hinhAnh == null || hinhAnh.trim().isEmpty()) {
+            hinhAnh = "image/BanPhim/banPhimMacDinh,png.png";
         }
-        if (!HinhAnh.trim().endsWith(".png") && !HinhAnh.trim().endsWith(".jpg")) {
+        if (!hinhAnh.trim().endsWith(".png") && !hinhAnh.trim().endsWith(".jpg")) {
             return "Hình ảnh phải có định dạng .png hoặc .jpg.";
         }
-        if (HinhAnh.length() > 100) {
+        if (hinhAnh.length() > 100) {
             return "Đường dẫn hình ảnh không được vượt quá 100 ký tự.";
         }
-        if(MoTa == null || MoTa.trim().isEmpty()) MoTa = "NULL";
-        if (MoTa.length() > 100) {
+        if(moTa == null || moTa.trim().isEmpty()) moTa = "NULL";
+        if (moTa.length() > 100) {
             return "Mô tả không được vượt quá 100 ký tự.";
         }
     

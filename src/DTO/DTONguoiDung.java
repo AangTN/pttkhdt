@@ -11,9 +11,8 @@ public class DTONguoiDung extends DTOTaiKhoan {
     private String HoTen;
     private Date NgaySinh;
     private String SoDienThoai;
-    private String tenNhomQuyen;
     public DTONguoiDung (String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int SoDu, String IDNhomQuyen, Date NgayTao, String IDNguoiDung, String HoTen, Date NgaySinh, String SoDienThoai, String Anh, String GioiTinh, String TrangThai, String tenNhomQuyen) {
-        super(IDTaiKhoan,TenTaiKhoan,MatKhau,SoDu,IDNhomQuyen);
+        super(IDTaiKhoan,TenTaiKhoan,MatKhau,SoDu,IDNhomQuyen,tenNhomQuyen);
         setNgayTao(NgayTao);
         setTrangThai(TrangThai.trim());
         setIDNguoiDung(IDNguoiDung.trim());
@@ -22,13 +21,7 @@ public class DTONguoiDung extends DTOTaiKhoan {
         setSoDienThoai(SoDienThoai.trim());
         setAnh(Anh);
         setGioiTinh(GioiTinh.trim());
-        setTenNhomQuyen(tenNhomQuyen);
-    }
-    public void setTenNhomQuyen(String tenNhomQuyen) {
-        this.tenNhomQuyen = tenNhomQuyen;
-    }
-    public String getTenNhomQuyen() {
-        return tenNhomQuyen;
+        setTenNhomQuyen(tenNhomQuyen.trim());
     }
     public void setAnh(String anh) {
         Anh = anh;

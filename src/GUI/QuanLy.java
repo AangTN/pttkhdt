@@ -111,6 +111,12 @@ public class QuanLy extends JFrame implements ActionListener {
         if(tenChucNang.trim().equals("Quản lý menu")) {
             noiDung.add(new QuanLyMenu(bllNet));
         }
+        if(tenChucNang.trim().equals("Quản lý đơn hàng")) {
+            noiDung.add(new QuanLyDonHang(bllNet));
+        }
+        if(tenChucNang.trim().equals("Quản lý máy")) {
+            noiDung.add(new QuanLyMay(bllNet));
+        }
     }
     private void refreshPanel() {
         noiDung.removeAll();
