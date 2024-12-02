@@ -12,7 +12,9 @@ import DTO.DTONguyenLieu;
 import DTO.HoaDon;
 import DTO.May;
 import DTO.ThanhPhanMonAn;
+import DTO.TinNhan;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
 public class BLLNet {
@@ -219,6 +221,36 @@ public class BLLNet {
     public ArrayList<May> layDanhSachMayThuong() {
         ArrayList<May> ds = new ArrayList<>();
         ds = daoQuanLy.layDanhSachMayThuong();
+        // for(int i=0;i<ds.size();i++) {
+        //     if(!ds.get(i).getTinhTrang().equals("Hư")) {
+        //         if(daoQuanLy.kiemTraMayCoChuot(ds.get(i).getIDMay()).equals("Không") || daoQuanLy.kiemTraMayCoBanPhim(ds.get(i).getIDMay()).equals("Không")) {
+        //             ds.get(i).setTinhTrang("Thiếu thiết bị");
+        //         }
+        //         else if(daoQuanLy.kiemTraMayXemChuotCoHu(ds.get(i).getIDMay()).equals("Hư") || daoQuanLy.kiemTraMayXemBanPhimCoHu(ds.get(i).getIDMay()).equals("Hư")) {
+        //             ds.get(i).setTinhTrang("Thiết bị hư");
+        //         } 
+        //     }
+        // }
+        return ds;
+    }
+    public String mayCoThieuThietBi(String idMay) {
+        if(daoQuanLy.kiemTraMayCoChuot(idMay).equals("Không") || daoQuanLy.kiemTraMayCoBanPhim(idMay).equals("Không")) {
+            return "Thiếu thiết bị";
+        }
+        return "Không";
+    }
+    public String mayCoHuThietBi(String idMay) {
+        if(daoQuanLy.kiemTraMayXemChuotCoHu(idMay).equals("Hư") || daoQuanLy.kiemTraMayXemBanPhimCoHu(idMay).equals("Hư")) {
+            return "Thiết bị hư";
+        }
+        return "Không";
+    }
+    public boolean kiemTraMayCoTinNhanMoiKhong(String idMay) {
+        return daoQuanLy.kiemTraMayCoTinNhanMoiKhong(idMay);
+    }
+    public ArrayList<May> layDanhSachMayVIP() {
+        ArrayList<May> ds = new ArrayList<>();
+        ds = daoQuanLy.layDanhSachMayVIP();
         for(int i=0;i<ds.size();i++) {
             if(!ds.get(i).getTinhTrang().equals("Hư")) {
                 if(daoQuanLy.kiemTraMayCoChuot(ds.get(i).getIDMay()).equals("Không") || daoQuanLy.kiemTraMayCoBanPhim(ds.get(i).getIDMay()).equals("Không")) {
@@ -231,7 +263,57 @@ public class BLLNet {
         }
         return ds;
     }
-    public boolean kiemTraMayCoTinNhanMoiKhong(String idMay) {
-        return daoQuanLy.kiemTraMayCoTinNhanMoiKhong(idMay);
+    public String timTenTaiKhoanCuaID(String id) {
+        return daoQuanLy.timTenTaiKhoanCuaID(id);
+    }
+    public DTOChuot layChuotCuaMay(String idMay) {
+        return daoQuanLy.layChuotCuaMay(idMay);
+    }
+    public DTOBanPhim layBanPhimCuaMay(String idMay) {
+        return daoQuanLy.layBanPhimCuaMay(idMay);
+    }
+    public String suaGiaGioChoi(String idMay, int giaChoi){
+        return daoQuanLy.suaGiaGioChoi(idMay, giaChoi);
+    }
+    public String tatMay(String idMay) {
+        daoQuanLy.xoaTinNhanTuMay(idMay);
+        return daoQuanLy.tatMay(idMay);
+    }
+    public String moMay(String idMay) {
+        return daoQuanLy.moMay(idMay);
+    }
+    public String thaoChuot(String idMay) {
+        return daoQuanLy.thaoChuot(idMay);
+    }
+    public String thaoBanPhim(String idMay) {
+        return daoQuanLy.thaoBanPhim(idMay);
+    }
+    public ArrayList<DTOChuot> layDanhSachChuotChuaLap() {
+        return daoQuanLy.layDanhSachChuotChuaLap();
+    }
+    public String lapChuot(String idChuot, String idMay) {
+        return daoQuanLy.lapChuot(idChuot, idMay);
+    }
+    public ArrayList<DTOBanPhim> layDanhSachBanPhimChuaLap() {
+        return daoQuanLy.layDanhSachBanPhimChuaLap();
+    }
+    public String lapBanPhim(String idBanPhim, String idMay) {
+        return daoQuanLy.lapBanPhim(idBanPhim, idMay);
+    }
+    public ArrayList<TinNhan> layTinNhanTuMay(String idMay) {
+        return daoQuanLy.layTinNhanTuMay(idMay);
+    }
+    public String guiTinNhan(String idMay, String idTaiKhoan, String noiDung) {
+        String id = daoQuanLy.timIDTinNhanChuaCo();
+        LocalDateTime currentTime = LocalDateTime.now();
+        TinNhan tinNhan = new TinNhan(id, idMay, idTaiKhoan, "", noiDung, currentTime, "Đã xem");
+        return daoQuanLy.guiTinNhan(tinNhan);
+    }
+    public void chinhTrangThaiDaXemTinNhanTuMay(String idMay) {
+        daoQuanLy.chinhTrangThaiDaXemTinNhanTuMay(idMay);
+    }
+    public String capNhatTinhTrangMay(String tinhTrang, String moTa, String idMay) {
+        if(moTa.length() > 100) return "Mô tả quả dài";
+        return daoQuanLy.capNhatTinhTrangMay(tinhTrang, moTa, idMay);
     }
 }

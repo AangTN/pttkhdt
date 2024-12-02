@@ -135,11 +135,13 @@ public class ThemChuot extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setCurrentDirectory(new File("C:\\Users\\ASUS\\Desktop\\pttkhdt\\Net\\image\\Chuot"));
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    tfHinhAnh.setText(selectedFile.getAbsolutePath()); // Hiển thị đường dẫn file đã chọn
+                    String fileName = selectedFile.getName(); // Lấy tên file
+                    String newPath = "image/Chuot/" + fileName; // Nối với đường dẫn mong muốn
+                    tfHinhAnh.setText(newPath);
                 }
             }
         });

@@ -115,7 +115,7 @@ public class QuanLy extends JFrame implements ActionListener {
             noiDung.add(new QuanLyDonHang(bllNet));
         }
         if(tenChucNang.trim().equals("Quản lý máy")) {
-            noiDung.add(new QuanLyMay(bllNet));
+            noiDung.add(new QuanLyMay(bllNet,IDTaiKhoan));
         }
     }
     private void refreshPanel() {

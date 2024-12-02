@@ -5,6 +5,10 @@ public class DTOChuot extends ThietBi{
         super(idChuot, tenChuot, tinhTrang, idMay, hinhAnh, moTa);
         setTocDoChuot(tocDoChuot);
     }
+    public DTOChuot() {
+        super();
+        tocDoChuot = 0;
+    }
     public int getTocDoChuot() {
         return tocDoChuot;
     }

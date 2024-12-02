@@ -121,6 +121,7 @@ public class QuanLyNguyenLieu extends JPanel {
             }
         });
         JScrollPane scrollPane = new JScrollPane(bang);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(10, 100, 700, 735);
         pnNguyenLieu.add(scrollPane);
     }

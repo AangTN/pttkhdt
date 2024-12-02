@@ -17,7 +17,14 @@ public class ThietBi {
         this.hinhAnh = hinhAnh != null ? hinhAnh.trim() : null;
         this.moTa = moTa != null ? moTa.trim() : null;
     }
-
+    public ThietBi() {
+        id = "";         // ID chuột
+        ten = "";        // Tên chuột
+        tinhTrang = "";  // Tình trạng
+        idMay = "";      // ID máy
+        hinhAnh = "";    // Hình ảnh
+        moTa = "";
+    }
     // Getter và Setter
     public String getId() {
         return id;

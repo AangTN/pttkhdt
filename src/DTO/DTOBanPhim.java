@@ -6,7 +6,9 @@ public class DTOBanPhim extends ThietBi {
         super(IDBanPhim, TenBanPhim, TinhTrang, IDMay, HinhAnh, MoTa);
         this.Led = Led;
     }
-
+    public DTOBanPhim(){
+        Led = "";
+    }
     // Getter and Setter methods
     public String getIDBanPhim() {
         return id;

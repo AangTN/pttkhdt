@@ -187,6 +187,7 @@ public class QuanLyThietBi extends JPanel {
             }
         });
         JScrollPane scrollPane = new JScrollPane(bangChuot);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(10, 100, 940, 735);
         pnBang.add(scrollPane);
     }
@@ -436,6 +437,8 @@ public class QuanLyThietBi extends JPanel {
     
         // Tạo JScrollPane và thêm vào panel
         JScrollPane scrollPane = new JScrollPane(bangBanPhim);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+
         scrollPane.setBounds(10, 100, 940, 735);
         pnBang.add(scrollPane);
     }
