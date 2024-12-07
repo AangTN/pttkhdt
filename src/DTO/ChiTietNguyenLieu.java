@@ -3,7 +3,7 @@ package DTO;
 import java.sql.Date;
 import java.util.Calendar;
 
-public class DTOChiTietNguyenLieu {
+public class ChiTietNguyenLieu {
     private String IDNguyenLieu;
     private Date ngayNhap;
     private int hanSuDung; // số ngày hạn sử dụng
@@ -11,7 +11,7 @@ public class DTOChiTietNguyenLieu {
     private int daSuDung;
 
     // Hàm khởi tạo đầy đủ tham số
-    public DTOChiTietNguyenLieu(String IDNguyenLieu, Date ngayNhap, int hanSuDung, int soLuongNhap, int daSuDung) {
+    public ChiTietNguyenLieu(String IDNguyenLieu, Date ngayNhap, int hanSuDung, int soLuongNhap, int daSuDung) {
         this.IDNguyenLieu = IDNguyenLieu;
         this.ngayNhap = ngayNhap;
         this.hanSuDung = hanSuDung;

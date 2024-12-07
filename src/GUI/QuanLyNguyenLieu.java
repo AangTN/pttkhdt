@@ -4,8 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import BLL.BLLNet;
-import DTO.DTOChiTietNguyenLieu;
-import DTO.DTONguyenLieu;
+import DTO.ChiTietNguyenLieu;
+import DTO.NguyenLieu;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,13 +20,13 @@ public class QuanLyNguyenLieu extends JPanel {
     private JPanel pnThongTin;
     private BLLNet bllNet;
     private DefaultTableModel model = new DefaultTableModel();
-    private ArrayList<DTONguyenLieu> dsNguyenLieu = new ArrayList<>();
+    private ArrayList<NguyenLieu> dsNguyenLieu = new ArrayList<>();
 
-    public void setDsNguyenLieu(ArrayList<DTONguyenLieu> dsNguyenLieu) {
+    public void setDsNguyenLieu(ArrayList<NguyenLieu> dsNguyenLieu) {
         this.dsNguyenLieu = dsNguyenLieu;
     }
 
-    public ArrayList<DTONguyenLieu> getDsNguyenLieu() {
+    public ArrayList<NguyenLieu> getDsNguyenLieu() {
         return dsNguyenLieu;
     }
 
@@ -186,7 +186,7 @@ public class QuanLyNguyenLieu extends JPanel {
         lbThongTinLoHang.setFont(new Font("Arial", Font.BOLD, 24));
         pnThongTin.add(lbThongTinLoHang);
         
-        ArrayList<DTOChiTietNguyenLieu> danhSachLoNguyenLieu = bllNet.layThongTinLoNguyenLieu(dsNguyenLieu.get(row).getIDNguyenLieu());
+        ArrayList<ChiTietNguyenLieu> danhSachLoNguyenLieu = bllNet.layThongTinLoNguyenLieu(dsNguyenLieu.get(row).getIDNguyenLieu());
         JPanel pnThongTinLoNguyenLieu = new JPanel(new GridLayout(danhSachLoNguyenLieu.size()+1,4));
         // Thêm tiêu đề cho bảng
         Font fontBold = new Font("Arial", Font.BOLD, 20);

@@ -1,13 +1,13 @@
 package DTO;
 
-public class DTOTaiKhoan {
+public class TaiKhoan {
     private String IDTaiKhoan;
     private String TenTaiKhoan;
     private String MatKhau;
     private int SoDu;
     private String IDNhomQuyen;
     private String TenNhomQuyen;
-    public DTOTaiKhoan(String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int soDu, String IDNhomQuyen, String TenNhomQuyen) {
+    public TaiKhoan(String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int soDu, String IDNhomQuyen, String TenNhomQuyen) {
         setIDNhomQuyen(IDNhomQuyen.trim());
         setIDTaiKhoan(IDTaiKhoan.trim());
         setMatKhau(MatKhau.trim());

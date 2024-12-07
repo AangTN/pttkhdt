@@ -2,7 +2,7 @@ package DTO;
 
 import java.sql.Date;
 
-public class DTONguoiDung extends DTOTaiKhoan {
+public class NguoiDung extends TaiKhoan {
     private String GioiTinh;
     private String Anh;
     private Date NgayTao;
@@ -11,7 +11,7 @@ public class DTONguoiDung extends DTOTaiKhoan {
     private String HoTen;
     private Date NgaySinh;
     private String SoDienThoai;
-    public DTONguoiDung (String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int SoDu, String IDNhomQuyen, Date NgayTao, String IDNguoiDung, String HoTen, Date NgaySinh, String SoDienThoai, String Anh, String GioiTinh, String TrangThai, String tenNhomQuyen) {
+    public NguoiDung (String IDTaiKhoan, String TenTaiKhoan, String MatKhau, int SoDu, String IDNhomQuyen, Date NgayTao, String IDNguoiDung, String HoTen, Date NgaySinh, String SoDienThoai, String Anh, String GioiTinh, String TrangThai, String tenNhomQuyen) {
         super(IDTaiKhoan,TenTaiKhoan,MatKhau,SoDu,IDNhomQuyen,tenNhomQuyen);
         setNgayTao(NgayTao);
         setTrangThai(TrangThai.trim());

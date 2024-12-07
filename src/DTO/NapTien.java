@@ -2,13 +2,13 @@ package DTO;
 
 import java.sql.Date;
 
-public class DTONapTien {
+public class NapTien {
     private String ID;
     private String IDTaiKhoan;
     private int GiaTriNap;
     private Date ThoiGian;
 
-    public DTONapTien(String ID, String IDTaiKhoan, int GiaTriNap, Date ThoiGian) {
+    public NapTien(String ID, String IDTaiKhoan, int GiaTriNap, Date ThoiGian) {
         this.ID = ID;
         this.IDTaiKhoan = IDTaiKhoan;
         this.GiaTriNap = GiaTriNap;

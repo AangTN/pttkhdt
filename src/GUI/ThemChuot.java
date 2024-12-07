@@ -3,7 +3,7 @@ package GUI;
 import javax.swing.*;
 
 import BLL.BLLNet;
-import DTO.DTOChuot;
+import DTO.Chuot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -123,7 +123,7 @@ public class ThemChuot extends JFrame {
                     return;
                 }
                 if(moTa.equals("")) moTa = "NULL";
-                DTOChuot chuot = new DTOChuot("NULL", tenChuot, intTocDoChuot, "Tốt", "NULL", hinhAnh, moTa);
+                Chuot chuot = new Chuot("NULL", tenChuot, intTocDoChuot, "Tốt", "NULL", hinhAnh, moTa);
                 String s = chuot.kiemTraDuLieu();
                 if(!s.equals("Hợp lệ")) JOptionPane.showMessageDialog(null, s);
                 else {

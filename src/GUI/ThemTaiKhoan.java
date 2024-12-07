@@ -2,14 +2,15 @@ package GUI;
 
 import javax.swing.*;
 import BLL.BLLNet;
-import DTO.DTONguoiDung;
+import DTO.NguoiDung;
 import java.util.*;
 import java.awt.*;
 import java.sql.Date;
 import java.awt.event.*;
+import java.io.File;
 public class ThemTaiKhoan extends JFrame {
     private BLLNet bllnet;
-    private ArrayList<DTONguoiDung> ds = new ArrayList<>();
+    private ArrayList<NguoiDung> ds = new ArrayList<>();
     private boolean isClosed = false; // Biến trạng thái
     public void setNet(BLLNet net) {
         bllnet = net;
@@ -18,7 +19,7 @@ public class ThemTaiKhoan extends JFrame {
         return isClosed; // Phương thức để kiểm tra trạng thái
     }
 
-    public ArrayList<DTONguoiDung> getDs() {
+    public ArrayList<NguoiDung> getDs() {
         return ds;
     }
     public ThemTaiKhoan(BLLNet net) {
@@ -131,11 +132,15 @@ public class ThemTaiKhoan extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File("C:\\Users\\ASUS\\Desktop\\pttkhdt\\Net\\image\\NguoiDung"));
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     // Lấy đường dẫn file đã chọn
-                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                    tfHinh.setText(filePath); // Đặt đường dẫn vào JTextField
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String fileName = selectedFile.getName(); // Lấy tên file
+                    String newPath = "image/NguoiDung/" + fileName; // Nối với đường dẫn mong muốn
+                    // String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    tfHinh.setText(newPath); // Đặt đường dẫn vào JTextField
                 }
             }
         });
@@ -273,9 +278,10 @@ public class ThemTaiKhoan extends JFrame {
         
                     // Lấy đường dẫn ảnh
                     String duongDanAnh = tfHinh.getText().trim(); // Có thể để trống
+                    if(duongDanAnh.equals("")) duongDanAnh = "image/NguoiDung/nhan_vien.png";
                     Date ngayTao = new Date(System.currentTimeMillis());
                     // Tạo đối tượng DTONguoiDung
-                    DTONguoiDung nguoiDung = new DTONguoiDung(
+                    NguoiDung nguoiDung = new NguoiDung(
                         "NULL",          // IDTaiKhoan
                         tenTaiKhoan,      // TenTaiKhoan
                         matKhau,          // MatKhau
@@ -292,7 +298,7 @@ public class ThemTaiKhoan extends JFrame {
                         loaiTaiKhoan      // tenNhomQuyen
                     );
                     String s = nguoiDung.kiemTraDuLieuThem();
-                    if(s.equals("Thành công")) {
+                    if(s.equals("Hợp lệ")) {
                         JOptionPane.showMessageDialog(null, bllnet.taoTaiKhoanVaNguoiDung(nguoiDung));
                     }
                     else JOptionPane.showMessageDialog(null, s);

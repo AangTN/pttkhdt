@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import BLL.BLLNet;
-import DTO.DTOBanPhim;
+import DTO.BanPhim;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -66,7 +66,7 @@ public class ThemBanPhim extends JFrame {
         // Set bounds for radio buttons
         rbCo.setBounds(150, 80, 60, 30);
         rbKhong.setBounds(220, 80, 80, 30);
-        
+        rbCo.setSelected(true);
         // Add radio buttons to the frame
         add(rbCo);
         add(rbKhong);
@@ -136,7 +136,7 @@ public class ThemBanPhim extends JFrame {
                     return;
                 }
                 if(moTa.equals("")) moTa = "NULL";
-                DTOBanPhim banPhim = new DTOBanPhim("NULL", tenBanPhim, "NULL", led, "Tốt", hinhAnh, moTa);
+                BanPhim banPhim = new BanPhim("NULL", tenBanPhim, "NULL", led, "Tốt", hinhAnh, moTa);
                 String s = banPhim.kiemTraDuLieu();
                 if(!s.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, s);

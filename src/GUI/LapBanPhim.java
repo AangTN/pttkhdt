@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -13,10 +15,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import BLL.BLLNet;
-import DTO.DTOBanPhim;
+import DTO.BanPhim;
 
 public class LapBanPhim extends JFrame {
-    private ArrayList<DTOBanPhim> danhSachBanPhimChuaLap = new ArrayList<>();
+    private ArrayList<BanPhim> danhSachBanPhimChuaLap = new ArrayList<>();
     private BLLNet bllNet;
     private boolean isClosed = false;
 
@@ -24,6 +26,13 @@ public class LapBanPhim extends JFrame {
         return isClosed; // Phương thức để kiểm tra trạng thái
     }
     public LapBanPhim(BLLNet net, String idMay) {
+        setTitle("Lắp bàn phím");
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isClosed = true;
+            }
+        });
         setSize(700, 600);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -51,7 +60,7 @@ public class LapBanPhim extends JFrame {
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18)); // Font tiêu đề
 
         // Thêm dữ liệu vào bảng
-        for (DTOBanPhim banPhim : danhSachBanPhimChuaLap) {
+        for (BanPhim banPhim : danhSachBanPhimChuaLap) {
             ImageIcon icon = new ImageIcon(
                 new ImageIcon(banPhim.getHinhAnh())
                     .getImage()
@@ -98,6 +107,9 @@ public class LapBanPhim extends JFrame {
         btLap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
+                if(row <= 0) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn phím để lắp");
+                }
                 String idBanPhim = danhSachBanPhimChuaLap.get(row).getId();
                 JOptionPane.showMessageDialog(null,bllNet.lapBanPhim(idBanPhim, idMay));
                 isClosed = true;

@@ -22,7 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import BLL.BLLNet;
-import DTO.DTOMonAn;
+import DTO.MonAn;
 import DTO.ThanhPhanMonAn;
 
 public class QuanLyMenu extends JPanel {
@@ -30,8 +30,8 @@ public class QuanLyMenu extends JPanel {
     private JPanel pnThongTin;
     private BLLNet bllNet;
     private DefaultTableModel model = new DefaultTableModel();
-    private ArrayList<DTOMonAn> dsMonAn = new ArrayList<>();
-    public void setDanhSach(ArrayList<DTOMonAn> dsMonAn) {
+    private ArrayList<MonAn> dsMonAn = new ArrayList<>();
+    public void setDanhSach(ArrayList<MonAn> dsMonAn) {
         this.dsMonAn = dsMonAn;
     }
     public void setBllNet(BLLNet bllNet) {
@@ -147,7 +147,7 @@ public class QuanLyMenu extends JPanel {
         pnThongTin.removeAll();
     
         // Lấy thông tin từ dsMonAn dựa vào hàng (row) được chọn
-        DTOMonAn monAn = dsMonAn.get(row);
+        MonAn monAn = dsMonAn.get(row);
     
         // Hiển thị ảnh món ăn
         ImageIcon icon = new ImageIcon(monAn.getHinhAnh().trim());
@@ -173,9 +173,11 @@ public class QuanLyMenu extends JPanel {
         JRadioButton rbKhoa = new JRadioButton("Khóa");
         rbKhoa.setBounds(310, 150, 100, 30);
         pnThongTin.add(rbKhoa);
+        rbKhoa.setEnabled(false);
     
         JRadioButton rbKhongKhoa = new JRadioButton("Không khóa");
         rbKhongKhoa.setBounds(420, 150, 120, 30);
+        rbKhongKhoa.setEnabled(false);
         pnThongTin.add(rbKhongKhoa);
     
         // Nhóm các nút radio để chỉ có một nút được chọn tại một thời điểm
@@ -191,10 +193,10 @@ public class QuanLyMenu extends JPanel {
         }
     
         // Tiêu đề cho bảng thành phần nguyên liệu
-        JLabel lbTitle = new JLabel("Thành phần nguyên liệu món ăn");
-        lbTitle.setFont(new Font("Arial", Font.BOLD, 22));
-        lbTitle.setBounds(50, 230, 600, 30);
-        pnThongTin.add(lbTitle);
+        JLabel lbThanhPhan = new JLabel("Thành phần nguyên liệu món ăn");
+        lbThanhPhan.setFont(new Font("Arial", Font.BOLD, 22));
+        lbThanhPhan.setBounds(50, 230, 600, 30);
+        pnThongTin.add(lbThanhPhan);
     
         // Lấy danh sách thành phần nguyên liệu
         ArrayList<ThanhPhanMonAn> dsThanhPhan = bllNet.layThanhPhanCuaMonAn(monAn.getID());

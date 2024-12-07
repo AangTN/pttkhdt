@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 public class Login extends JFrame {
     JTextField username = new JTextField();
     JPasswordField pass = new JPasswordField();
-    JButton go;
+    JButton btDangNhap;
     ImageIcon logo = new ImageIcon("image/Logo.png");
     ImageIcon background = new ImageIcon("image/nen dang nhap.jpg");
     BLLNet bllNet = new BLLNet();
@@ -42,13 +42,13 @@ public class Login extends JFrame {
 
         username.setToolTipText("Tên đăng nhập");
         pass.setToolTipText("Mật khẩu");
-        JLabel label_1 = new JLabel("Tên tài khoản");
-        label_1.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        nhapLieu.add(label_1);
+        JLabel lbTenDangNhap = new JLabel("Tên tài khoản");
+        lbTenDangNhap.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        nhapLieu.add(lbTenDangNhap);
         nhapLieu.add(username);
-        JLabel label = new JLabel("Mật khẩu");
-        label.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        nhapLieu.add(label);
+        JLabel lbMatKhau = new JLabel("Mật khẩu");
+        lbMatKhau.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        nhapLieu.add(lbMatKhau);
         nhapLieu.add(pass);
         dangNhap.add(nhapLieu);
 
@@ -59,11 +59,11 @@ public class Login extends JFrame {
         imageBackground.setBounds(0, 0, backGround.getIconWidth(), backGround.getIconHeight());
 
         ImageIcon muiTenDi = new ImageIcon("image/muiten-icon.png");
-        go = new JButton(muiTenDi);
-        go.setBounds(200 - 75/2, 550, 80, 80);
-        go.setBackground(Color.white);
-        go.setBorder(null);
-        go.addActionListener(new ActionListener() {
+        btDangNhap = new JButton(muiTenDi);
+        btDangNhap.setBounds(200 - 75/2, 550, 80, 80);
+        btDangNhap.setBackground(Color.white);
+        btDangNhap.setBorder(null);
+        btDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 if(username.getText().equals("")||String.valueOf(pass.getPassword()).equals("")) JOptionPane.showMessageDialog(null,"Thiếu thông tin đăng nhập"); 
                 else {
@@ -76,16 +76,12 @@ public class Login extends JFrame {
                 }
             }
         });
-        dangNhap.add(go);
+        dangNhap.add(btDangNhap);
 
-        Label title = new Label("Cửa hàng dụng cụ SGU");
-        title.setFont(new Font("Arial",Font.BOLD,16));
-        title.setBounds(107,700,200,30);
-        dangNhap.add(title);
-
-        JLabel moTa = new JLabel("Hãy chuẩn bị thay đổi cơ thể của bạn");
-        moTa.setBounds(95,724,340,30);
-        dangNhap.add(moTa);
+        Label lbTenPhongNet = new Label("Phòng Net PTTKHDT");
+        lbTenPhongNet.setFont(new Font("Arial",Font.BOLD,16));
+        lbTenPhongNet.setBounds(107,700,200,30);
+        dangNhap.add(lbTenPhongNet);
 
         getContentPane().add(dangNhap);
         

@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import BLL.BLLNet;
-import DTO.DTONguyenLieu; // Bạn cần tạo DTO cho Nguyên Liệu
+import DTO.NguyenLieu; // Bạn cần tạo DTO cho Nguyên Liệu
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -55,7 +55,7 @@ public class ThemNguyenLieu extends JFrame {
         add(tfDonVi);
 
         // Label và TextField cho hình ảnh
-        JLabel lbHinhAnh = new JLabel("Hình ảnh:*");
+        JLabel lbHinhAnh = new JLabel("Hình ảnh:");
         lbHinhAnh.setBounds(30, 130, 100, 30);
         add(lbHinhAnh);
 
@@ -89,7 +89,7 @@ public class ThemNguyenLieu extends JFrame {
                     JOptionPane.showMessageDialog(null, "Đơn vị không được để trống.");
                     return;
                 }
-                DTONguyenLieu nguyenLieu = new DTONguyenLieu("NULL", tenNguyenLieu, donVi, hinhAnh);
+                NguyenLieu nguyenLieu = new NguyenLieu("NULL", tenNguyenLieu, donVi, hinhAnh);
                 String s = nguyenLieu.kiemTraDuLieu(); // Đảm bảo bạn có phương thức kiểm tra dữ liệu
                 if (!s.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, s);

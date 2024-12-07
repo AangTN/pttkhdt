@@ -2,13 +2,13 @@ package BLL;
 import DAO.DAODangNhap;
 import DAO.DAOQuanLy;
 import DTO.ChiTietHoaDon;
-import DTO.DTOBanPhim;
-import DTO.DTOChiTietNguyenLieu;
-import DTO.DTOChuot;
-import DTO.DTOMonAn;
-import DTO.DTONapTien;
-import DTO.DTONguoiDung;
-import DTO.DTONguyenLieu;
+import DTO.BanPhim;
+import DTO.ChiTietNguyenLieu;
+import DTO.Chuot;
+import DTO.MonAn;
+import DTO.NapTien;
+import DTO.NguoiDung;
+import DTO.NguyenLieu;
 import DTO.HoaDon;
 import DTO.May;
 import DTO.ThanhPhanMonAn;
@@ -33,13 +33,13 @@ public class BLLNet {
     public String layTenNhanVien(String IDTaiKhoan) {
         return daoQuanLy.layTenNhanVien(IDTaiKhoan);
     }
-    public ArrayList<DTONguoiDung> layDanhSachTaiKhoan() {
+    public ArrayList<NguoiDung> layDanhSachTaiKhoan() {
         return daoQuanLy.layDanhSachTaiKhoan();
     }
     public Vector<String> layDanhSachQuyen() {
         return daoQuanLy.layDanhSachQuyen();
     }
-    public String taoTaiKhoanVaNguoiDung(DTONguoiDung thongtin) {
+    public String taoTaiKhoanVaNguoiDung(NguoiDung thongtin) {
         String maTaiKhoan = daoQuanLy.layMaTaiKhoanChuaCo();
         String maNguoiDung = daoQuanLy.layMaNguoiDungChuaTonTai();
         String IDNhomQuyen = daoQuanLy.timIDNhomQuyen(thongtin.getTenNhomQuyen());
@@ -55,7 +55,7 @@ public class BLLNet {
         }
         return s;
     }
-    public String suaTaiKhoanVaNguoiDung(DTONguoiDung thongtin) {
+    public String suaTaiKhoanVaNguoiDung(NguoiDung thongtin) {
         String IDNhomQuyen = daoQuanLy.timIDNhomQuyen(thongtin.getTenNhomQuyen());
         thongtin.setIDNhomQuyen(IDNhomQuyen);
         String s = daoQuanLy.suaTaiKhoan(thongtin);
@@ -66,13 +66,13 @@ public class BLLNet {
         }
         return s;
     }
-    public ArrayList<DTONguoiDung> timKiemTaiKhoanVaNguoiDung(String noiDungTim, String truong) {
+    public ArrayList<NguoiDung> timKiemTaiKhoanVaNguoiDung(String noiDungTim, String truong) {
         if(truong.equals("Tên tài khoản")) return daoQuanLy.timKiemTaiKhoanTheoTenTaiKhoan(noiDungTim);
         if(truong.equals("Tên người dùng")) return daoQuanLy.timKiemTaiKhoanTheoHoTen(noiDungTim);
         if(truong.equals("Số điện thoại")) return daoQuanLy.timKiemTaiKhoanTheoSoDienThoai(noiDungTim);
         return daoQuanLy.layDanhSachTaiKhoan();
     }
-    public String napTien(DTONapTien nap) {
+    public String napTien(NapTien nap) {
         String maNap = daoQuanLy.layMaNapTienChuaTonTai();
         nap.setID(maNap);
         if(daoQuanLy.ghiThongTinNap(nap) == true) {
@@ -81,20 +81,20 @@ public class BLLNet {
         }
         return "Ghi thông tin nạp thất bại";
     }
-    public ArrayList<DTOChuot> layDanhSachChuot() {
+    public ArrayList<Chuot> layDanhSachChuot() {
         return daoQuanLy.layDanhSachChuot();
     }
-    public ArrayList<DTOBanPhim> layDanhSachBanPhim() {
+    public ArrayList<BanPhim> layDanhSachBanPhim() {
         return daoQuanLy.layDanhSachBanPhim();
     }
-    public ArrayList<DTOChuot> timKiemChuot(String noiDungTim, String loaiTim) {
+    public ArrayList<Chuot> timKiemChuot(String noiDungTim, String loaiTim) {
         if(noiDungTim.equals("")) return daoQuanLy.layDanhSachChuot();
         if(loaiTim.equals("ID chuột")) return daoQuanLy.timKiemChuotTheoIDChuot(noiDungTim);
         if(loaiTim.equals("Tên chuột")) return daoQuanLy.timKiemChuotTheoTen(noiDungTim);
         if(loaiTim.equals("ID máy")) return daoQuanLy.timKiemChuotTheoIDMay(noiDungTim);
         return daoQuanLy.layDanhSachChuot();
     }
-    public ArrayList<DTOBanPhim> timKiemBanPhim(String noiDungTim, String loaiTim) {
+    public ArrayList<BanPhim> timKiemBanPhim(String noiDungTim, String loaiTim) {
         if(noiDungTim.equals("")) return daoQuanLy.layDanhSachBanPhim();
         if (loaiTim.equals("ID bàn phím")) return daoQuanLy.timKiemBanPhimTheoIDBanPhim(noiDungTim);
         if (loaiTim.equals("Tên bàn phím")) return daoQuanLy.timKiemBanPhimTheoTen(noiDungTim);
@@ -107,51 +107,51 @@ public class BLLNet {
     public String xoaBanPhim(String IDBanPhim) {
         return daoQuanLy.xoaBanPhim(IDBanPhim);
     }
-    public String suaChuot(DTOChuot chuot) {
+    public String suaChuot(Chuot chuot) {
         return daoQuanLy.suaChuot(chuot);
     }
-    public String suaBanPhim(DTOBanPhim banPhim) {
+    public String suaBanPhim(BanPhim banPhim) {
         return daoQuanLy.suaBanPhim(banPhim);
     }
-    public String themNChuot(DTOChuot chuot, int soLuong) {
+    public String themNChuot(Chuot chuot, int soLuong) {
         return daoQuanLy.themNChuot(chuot, soLuong);
     }
-    public String themNBanPhim(DTOBanPhim banPhim, int soLuong) {
+    public String themNBanPhim(BanPhim banPhim, int soLuong) {
         return daoQuanLy.themNBanPhim(banPhim, soLuong);
     }
-    public ArrayList<DTONguyenLieu> layDanhSachNguyenLieu() {
+    public ArrayList<NguyenLieu> layDanhSachNguyenLieu() {
         return daoQuanLy.layDanhSachNguyenLieu();
     }
     public int laySoLuongNguyenLieuTrongKho(String idNguyenLieu) {
         return daoQuanLy.soLuongNguyenLieuTrongKho(idNguyenLieu);
     }
-    public String themNguyenlieu(DTONguyenLieu nguyenLieu) {
+    public String themNguyenlieu(NguyenLieu nguyenLieu) {
         if(daoQuanLy.kiemTraTenNguyenLieuTonTai(nguyenLieu.getTenNguyenLieu()) == true) return "Tên nguyên liệu đã tồn tại";
         nguyenLieu.setIDNguyenLieu(daoQuanLy.layMaNguyenLieuChuaTonTai());
         return daoQuanLy.themNguyenLieu(nguyenLieu);
     }
-    public ArrayList<DTONguyenLieu> timKiemNguyenLieu(String tenNguyenLieu) {
+    public ArrayList<NguyenLieu> timKiemNguyenLieu(String tenNguyenLieu) {
         if(tenNguyenLieu.equals("")) return daoQuanLy.layDanhSachNguyenLieu();
         return daoQuanLy.timKiemNguyenLieu(tenNguyenLieu);
     }
-    public ArrayList<DTOChiTietNguyenLieu> layThongTinLoNguyenLieu(String IDNguyenLieu) {
+    public ArrayList<ChiTietNguyenLieu> layThongTinLoNguyenLieu(String IDNguyenLieu) {
         return daoQuanLy.layThongTinLoNguyenLieu(IDNguyenLieu);
     }
-    public String NhapNguyenLieu(DTOChiTietNguyenLieu nl) {
+    public String NhapNguyenLieu(ChiTietNguyenLieu nl) {
         String id = daoQuanLy.timMaLoChuaTonTai();
         return daoQuanLy.NhapNguyenLieu(nl, id);
     }
-    public ArrayList<DTOMonAn> layDanhSachMonAn() {
+    public ArrayList<MonAn> layDanhSachMonAn() {
         return daoQuanLy.layDanhSachMonAn();
     }
-    public ArrayList<DTOMonAn> timKiemMonAn(String tenMonAn) {
+    public ArrayList<MonAn> timKiemMonAn(String tenMonAn) {
         if(tenMonAn.equals("")) return daoQuanLy.layDanhSachMonAn();
         return daoQuanLy.timKiemMonAn(tenMonAn);
     }
     public ArrayList<ThanhPhanMonAn> layThanhPhanMonAnDeThem() {
         return daoQuanLy.layThanhPhanMonAnDeThem();
     }
-    public String themMonAn(DTOMonAn monAn, ArrayList<ThanhPhanMonAn> dsThanhPhan) {
+    public String themMonAn(MonAn monAn, ArrayList<ThanhPhanMonAn> dsThanhPhan) {
         if(daoQuanLy.kiemTraTenMonAnDaTonTai(monAn.getTenMonAn()) == true) return "Tên món ăn đã tồn tại";
         monAn.setID(daoQuanLy.layMaMonAnChuaTonTai());
         String s = daoQuanLy.themMonAn(monAn);
@@ -266,10 +266,10 @@ public class BLLNet {
     public String timTenTaiKhoanCuaID(String id) {
         return daoQuanLy.timTenTaiKhoanCuaID(id);
     }
-    public DTOChuot layChuotCuaMay(String idMay) {
+    public Chuot layChuotCuaMay(String idMay) {
         return daoQuanLy.layChuotCuaMay(idMay);
     }
-    public DTOBanPhim layBanPhimCuaMay(String idMay) {
+    public BanPhim layBanPhimCuaMay(String idMay) {
         return daoQuanLy.layBanPhimCuaMay(idMay);
     }
     public String suaGiaGioChoi(String idMay, int giaChoi){
@@ -288,13 +288,13 @@ public class BLLNet {
     public String thaoBanPhim(String idMay) {
         return daoQuanLy.thaoBanPhim(idMay);
     }
-    public ArrayList<DTOChuot> layDanhSachChuotChuaLap() {
+    public ArrayList<Chuot> layDanhSachChuotChuaLap() {
         return daoQuanLy.layDanhSachChuotChuaLap();
     }
     public String lapChuot(String idChuot, String idMay) {
         return daoQuanLy.lapChuot(idChuot, idMay);
     }
-    public ArrayList<DTOBanPhim> layDanhSachBanPhimChuaLap() {
+    public ArrayList<BanPhim> layDanhSachBanPhimChuaLap() {
         return daoQuanLy.layDanhSachBanPhimChuaLap();
     }
     public String lapBanPhim(String idBanPhim, String idMay) {

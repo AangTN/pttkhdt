@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import BLL.BLLNet;
-import DTO.DTOMonAn;
+import DTO.MonAn;
 import DTO.ThanhPhanMonAn;
 
 public class ThemMonAn extends JFrame {
@@ -185,7 +185,7 @@ public class ThemMonAn extends JFrame {
                 String trangThai;
                 if(rbKhoa.isSelected()) trangThai = "Khóa";
                 else trangThai = "Không khóa";
-                DTOMonAn monAn = new DTOMonAn("NULL", tenMonAn, giaTien, hinhAnh, trangThai);
+                MonAn monAn = new MonAn("NULL", tenMonAn, giaTien, hinhAnh, trangThai);
                 String kiemTraThongTinMonAn = monAn.kiemTraHopLeMonAn();
                 if(!kiemTraThongTinMonAn.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, kiemTraThongTinMonAn);

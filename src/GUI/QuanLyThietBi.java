@@ -13,24 +13,24 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import BLL.BLLNet;
-import DTO.DTOBanPhim;
-import DTO.DTOChuot;
+import DTO.BanPhim;
+import DTO.Chuot;
 
 public class QuanLyThietBi extends JPanel {
     private BLLNet bllNet;
     private JPanel pnBang;
     private JPanel pnThongTin;
-    private ArrayList<DTOChuot> danhSachChuot = new ArrayList<>();
+    private ArrayList<Chuot> danhSachChuot = new ArrayList<>();
     private DefaultTableModel modelChuot = new DefaultTableModel();
-    private ArrayList<DTOBanPhim> danhSachBanPhim = new ArrayList<>();
+    private ArrayList<BanPhim> danhSachBanPhim = new ArrayList<>();
     private DefaultTableModel modelBanPhim = new DefaultTableModel();
     public void setBllNet(BLLNet net) {
         this.bllNet = net;
     }
-    public void setDanhSachChuot(ArrayList <DTOChuot> danhSachChuot) {
+    public void setDanhSachChuot(ArrayList <Chuot> danhSachChuot) {
         this.danhSachChuot = danhSachChuot;
     }
-    public void setDanhSachBanPhim(ArrayList<DTOBanPhim> danhSachBanPhim) {
+    public void setDanhSachBanPhim(ArrayList<BanPhim> danhSachBanPhim) {
         this.danhSachBanPhim = danhSachBanPhim;
     }
     public QuanLyThietBi(BLLNet net) {
@@ -159,7 +159,7 @@ public class QuanLyThietBi extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = bangChuot.getSelectedRow();
-                DTOChuot chuot = danhSachChuot.get(row);
+                Chuot chuot = danhSachChuot.get(row);
                 thongTinChuot(chuot);
             }
         });
@@ -188,7 +188,7 @@ public class QuanLyThietBi extends JPanel {
         });
         JScrollPane scrollPane = new JScrollPane(bangChuot);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(10, 100, 940, 735);
+        scrollPane.setBounds(10, 100, 930, 690);
         pnBang.add(scrollPane);
     }
     public void veBangChuot() {
@@ -197,7 +197,7 @@ public class QuanLyThietBi extends JPanel {
             modelChuot.addRow(new Object[]{danhSachChuot.get(i).getId(),danhSachChuot.get(i).getTen(),danhSachChuot.get(i).getTocDoChuot(),danhSachChuot.get(i).getTinhTrang()});
         }
     }
-    public void thongTinChuot(DTOChuot chuot) {
+    public void thongTinChuot(Chuot chuot) {
         // Xóa tất cả các thành phần cũ trong panel pnThongTin
         pnThongTin.removeAll();
         
@@ -291,7 +291,7 @@ public class QuanLyThietBi extends JPanel {
                 String moTa = taMoTa.getText().trim();
                         
                 // Tạo đối tượng DTOChuot mới
-                DTOChuot chuotMoi = new DTOChuot(idChuot, tenChuot, tocDoChuot, tinhTrang, idMay, hinhAnh, moTa);
+                Chuot chuotMoi = new Chuot(idChuot, tenChuot, tocDoChuot, tinhTrang, idMay, hinhAnh, moTa);
                 String kiemTra = chuotMoi.kiemTraDuLieu();
                 if(kiemTra.equals("Hợp lệ")) {
                     String s = bllNet.suaChuot(chuotMoi);
@@ -406,7 +406,7 @@ public class QuanLyThietBi extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = bangBanPhim.getSelectedRow();
-                DTOBanPhim banPhim = danhSachBanPhim.get(row);
+                BanPhim banPhim = danhSachBanPhim.get(row);
                 thongTinBanPhim(banPhim);  // Hiển thị thông tin chi tiết bàn phím
             }
         });
@@ -420,7 +420,7 @@ public class QuanLyThietBi extends JPanel {
                 String IDBanPhim = modelBanPhim.getValueAt(row, 0).toString();
                 String s =  bllNet.xoaBanPhim(IDBanPhim);
                 String maMay = danhSachBanPhim.get(row).getIdMay();
-                if(!maMay.equals("")||!maMay.isEmpty()) {
+                if(!(maMay==null)) {
                     JOptionPane.showMessageDialog(null, "Bàn phím đang được sử dụng");
                     return;
                 }
@@ -439,7 +439,7 @@ public class QuanLyThietBi extends JPanel {
         JScrollPane scrollPane = new JScrollPane(bangBanPhim);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        scrollPane.setBounds(10, 100, 940, 735);
+        scrollPane.setBounds(10, 100, 930, 690);
         pnBang.add(scrollPane);
     }
     public void veBangBanPhim() {
@@ -447,7 +447,7 @@ public class QuanLyThietBi extends JPanel {
         for(int i=0;i<danhSachBanPhim.size();i++)
         modelBanPhim.addRow(new Object[]{danhSachBanPhim.get(i).getIDBanPhim(),danhSachBanPhim.get(i).getTen(),danhSachBanPhim.get(i).getLed(),danhSachBanPhim.get(i).getTinhTrang()});
     }
-    public void thongTinBanPhim(DTOBanPhim banPhim) {
+    public void thongTinBanPhim(BanPhim banPhim) {
         // Xóa tất cả các thành phần cũ trong panel pnThongTin
         pnThongTin.removeAll();
         
@@ -560,7 +560,7 @@ public class QuanLyThietBi extends JPanel {
                 String moTa = taMoTa.getText().trim();
         
                 // Tạo đối tượng DTOBanPhim mới
-                DTOBanPhim banPhimMoi = new DTOBanPhim(idBanPhim, tenBanPhim, idMay, led, tinhTrang, hinhAnh, moTa);
+                BanPhim banPhimMoi = new BanPhim(idBanPhim, tenBanPhim, idMay, led, tinhTrang, hinhAnh, moTa);
                 
                 // Kiểm tra dữ liệu trước khi sửa
                 String kiemTra = banPhimMoi.kiemTraDuLieu();

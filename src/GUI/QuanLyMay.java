@@ -11,8 +11,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import BLL.BLLNet;
-import DTO.DTOBanPhim;
-import DTO.DTOChuot;
+import DTO.BanPhim;
+import DTO.Chuot;
 import DTO.May;
 import DTO.TinNhan;
 
@@ -44,11 +44,9 @@ public class QuanLyMay extends JPanel {
         tinhTrangMay.add(moTa);
 
         thongTinMay = new JPanel(null);
-        thongTinMay.setBounds(900, 70, 540, 830); 
-        thongTinMay.setBackground(Color.WHITE);
+        thongTinMay.setBounds(900, 70, 540, 830);
 
         tinhTrangMay.setBackground(Color.WHITE);
-        thongTinMay.setBackground(Color.WHITE);
         pnCacMay = new JPanel(null);
         pnCacMay.setBackground(Color.white);
         tinhTrangMay.add(pnCacMay);
@@ -198,6 +196,7 @@ public class QuanLyMay extends JPanel {
         if (loadTinNhan != null && loadTinNhan.isRunning()) {
             loadTinNhan.stop();
         }
+        thongTinMay.setBackground(Color.WHITE);
         May selectedMay = dsMay.get(row);
         bllNet.chinhTrangThaiDaXemTinNhanTuMay(selectedMay.getIDMay());
         veCacMay();
@@ -236,6 +235,11 @@ public class QuanLyMay extends JPanel {
         btCapNhat.setBackground(Color.WHITE);
         btCapNhat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String strMoTo = txtMoTa.getText().trim();
+                if(strMoTo.length() > 100) {
+                    JOptionPane.showMessageDialog(null, "Mô tả không được quá 100 ký tự");
+                    return;
+                }
                 String trangThai;
                 if(rbTot.isSelected()) trangThai = "Tốt";
                 else trangThai = "Hư";
@@ -358,17 +362,17 @@ public class QuanLyMay extends JPanel {
         pnThietBiMay.setBounds(10, 290, 520, 200);
         pnThietBiMay.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Thiết bị", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 20)));  // Khung viền và tiêu đề
         thongTinMay.add(pnThietBiMay);
-        DTOChuot chuot = bllNet.layChuotCuaMay(selectedMay.getIDMay());
+        Chuot chuot = bllNet.layChuotCuaMay(selectedMay.getIDMay());
         JPanel pnChuot = new JPanel(null);
         pnChuot.setBounds(10,25, 500, 75);
         if (!chuot.getId().equals("")) {
             // Tạo hình ảnh chuột
-            ImageIcon imageAnh = new ImageIcon(chuot.getHinhAnh());
-            Image scale = imageAnh.getImage().getScaledInstance(75, 75, Image.SCALE_DEFAULT);
-            imageAnh = new ImageIcon(scale);
+            ImageIcon imageAnhChuot = new ImageIcon(chuot.getHinhAnh());
+            Image scale = imageAnhChuot.getImage().getScaledInstance(75, 75, Image.SCALE_DEFAULT);
+            imageAnhChuot = new ImageIcon(scale);
         
             // Tạo JLabel cho hình ảnh chuột
-            JLabel lbAnhChuot = new JLabel(imageAnh);
+            JLabel lbAnhChuot = new JLabel(imageAnhChuot);
             lbAnhChuot.setBounds(0, 0, 75, 75);
         
             // Tạo JLabel cho tên chuột, thay đổi kích thước và căn giữa
@@ -426,15 +430,15 @@ public class QuanLyMay extends JPanel {
             });
             pnChuot.add(btThemChuot);
         }
-        DTOBanPhim banPhim = bllNet.layBanPhimCuaMay(selectedMay.getIDMay());
+        BanPhim banPhim = bllNet.layBanPhimCuaMay(selectedMay.getIDMay());
         JPanel pnBanPhim = new JPanel(null);
         pnBanPhim.setBounds(10,110, 500, 75);
         if (!banPhim.getId().equals("")) {
-            ImageIcon imageAnh = new ImageIcon(banPhim.getHinhAnh());
-            Image scale = imageAnh.getImage().getScaledInstance(75, 75, Image.SCALE_DEFAULT);
-            imageAnh = new ImageIcon(scale);
+            ImageIcon imageAnhBP = new ImageIcon(banPhim.getHinhAnh());
+            Image scale = imageAnhBP.getImage().getScaledInstance(75, 75, Image.SCALE_DEFAULT);
+            imageAnhBP = new ImageIcon(scale);
         
-            JLabel lbAnhBanPhim = new JLabel(imageAnh);
+            JLabel lbAnhBanPhim = new JLabel(imageAnhBP);
             lbAnhBanPhim.setBounds(0, 0, 75, 75);
         
             JLabel lbTenBanPhim = new JLabel(banPhim.getTen());
@@ -507,6 +511,14 @@ public class QuanLyMay extends JPanel {
         btGuiTin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String noiDung = txtTinNhan.getText().trim();
+                if(noiDung.length() > 100) {
+                    JOptionPane.showMessageDialog(null, "Nội dung nhắn không được quá quá 100 ký tự");
+                    return;
+                }
+                if(noiDung.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Nội dung không được rỗng");
+                    return;
+                }
                 bllNet.guiTinNhan(selectedMay.getIDMay(), idTaiKhoan, noiDung);
                 hienTinNhan(selectedMay.getIDMay());
                 txtTinNhan.setText("");;

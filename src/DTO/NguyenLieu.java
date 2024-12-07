@@ -1,12 +1,12 @@
 package DTO;
 
-public class DTONguyenLieu {
+public class NguyenLieu {
     private String IDNguyenLieu;
     private String tenNguyenLieu;
     private String donVi;
     private String anh;
     // Hàm khởi tạo đầy đủ tham số
-    public DTONguyenLieu(String IDNguyenLieu, String tenNguyenLieu, String donVi, String anh) {
+    public NguyenLieu(String IDNguyenLieu, String tenNguyenLieu, String donVi, String anh) {
         this.IDNguyenLieu = IDNguyenLieu;
         this.tenNguyenLieu = tenNguyenLieu;
         this.donVi = donVi;

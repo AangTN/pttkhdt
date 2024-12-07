@@ -1,6 +1,6 @@
 package DTO;
 
-public class DTOMonAn {
+public class MonAn {
     private String ID;
     private String tenMonAn;
     private int giaTien;
@@ -8,7 +8,7 @@ public class DTOMonAn {
     private String trangThai;
 
     // Constructor
-    public DTOMonAn(String ID, String tenMonAn, int giaTien, String hinhAnh, String trangThai) {
+    public MonAn(String ID, String tenMonAn, int giaTien, String hinhAnh, String trangThai) {
         this.ID = ID.trim();
         this.tenMonAn = tenMonAn.trim();
         this.giaTien = giaTien;

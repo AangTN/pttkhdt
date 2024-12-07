@@ -9,8 +9,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import BLL.BLLNet;
-import DTO.DTONapTien;
-import DTO.DTONguoiDung;
+import DTO.NapTien;
+import DTO.NguoiDung;
 import java.sql.Date;
 
 import javax.swing.table.DefaultTableModel;
@@ -21,8 +21,8 @@ public class QuanLyTaiKhoan extends JPanel{
     private BLLNet bllNet;
     
     private DefaultTableModel model;
-    private ArrayList <DTONguoiDung> dsNguoiDung = new ArrayList<>();
-    public void setDsNguoiDung(ArrayList<DTONguoiDung> dsNguoiDung) {
+    private ArrayList <NguoiDung> dsNguoiDung = new ArrayList<>();
+    public void setDsNguoiDung(ArrayList<NguoiDung> dsNguoiDung) {
         this.dsNguoiDung = dsNguoiDung;
     }
     public void setBllNet(BLLNet bllNet) {
@@ -132,7 +132,7 @@ public class QuanLyTaiKhoan extends JPanel{
         pnThongTin.removeAll();
         pnThongTin.revalidate();
         pnThongTin.repaint();
-        DTONguoiDung thongTin = dsNguoiDung.get(row);
+        NguoiDung thongTin = dsNguoiDung.get(row);
         ImageIcon anhDaiDien = new ImageIcon(thongTin.getAnh());
         Image imageanhDaiDien = anhDaiDien.getImage().getScaledInstance(250,250,Image.SCALE_DEFAULT); 
         anhDaiDien = new ImageIcon(imageanhDaiDien);
@@ -249,7 +249,7 @@ public class QuanLyTaiKhoan extends JPanel{
                                 if (soTienNap > 0) {
                                     // Cập nhật số dư với số tiền đã nạp
                                     Date ngayHienTai = new Date(System.currentTimeMillis());
-                                    if(bllNet.napTien(new DTONapTien("NULL", thongTin.getIDTaiKhoan(), soTienNap,ngayHienTai)).equals("Thành công")) {
+                                    if(bllNet.napTien(new NapTien("NULL", thongTin.getIDTaiKhoan(), soTienNap,ngayHienTai)).equals("Thành công")) {
                                         int soDuMoi = Integer.parseInt(tfSoDu.getText()) + soTienNap;
                                         tfSoDu.setText(String.valueOf(soDuMoi));
                                         model.setValueAt(soDuMoi, row, 3);
@@ -294,7 +294,7 @@ public class QuanLyTaiKhoan extends JPanel{
         tfMatKhau.setText(thongTin.getMatKhau());
         tfSoDienThoai.setText(thongTin.getSoDienThoai());
         tfSoDu.setText(String.valueOf(thongTin.getSoDu()));
-        cbLoaiTaiKhoan.setSelectedItem(thongTin.getTenNhomQuyen());
+        cbLoaiTaiKhoan.setSelectedItem(thongTin.getTenNhomQuyen().trim());
         String[] ngay = thongTin.getNgaySinh().toString().split("-");
         cbNam.setSelectedItem(Integer.parseInt(ngay[0])); // Năm
         cbThang.setSelectedItem(Integer.parseInt(ngay[2])); // Tháng
@@ -354,7 +354,7 @@ public class QuanLyTaiKhoan extends JPanel{
                 String trangThai = rbKhoa.isSelected() ? "Khóa" : "Không khóa";
 
                 // Tạo đối tượng DTONguoiDung mới với đầy đủ thuộc tính
-                DTONguoiDung nguoiDung = new DTONguoiDung(
+                NguoiDung nguoiDung = new NguoiDung(
                 thongTin.getIDNguoiDung(), // IDTaiKhoan
                 tenTaiKhoan,               // TenTaiKhoan
                 matKhau,                   // MatKhau

@@ -1,11 +1,11 @@
 package DTO;
-public class DTOChuot extends ThietBi{
+public class Chuot extends ThietBi{
     private int tocDoChuot;  // Tốc độ chuột
-    public DTOChuot(String idChuot, String tenChuot, int tocDoChuot, String tinhTrang, String idMay, String hinhAnh, String moTa) {
+    public Chuot(String idChuot, String tenChuot, int tocDoChuot, String tinhTrang, String idMay, String hinhAnh, String moTa) {
         super(idChuot, tenChuot, tinhTrang, idMay, hinhAnh, moTa);
         setTocDoChuot(tocDoChuot);
     }
-    public DTOChuot() {
+    public Chuot() {
         super();
         tocDoChuot = 0;
     }

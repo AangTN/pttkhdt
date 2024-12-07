@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import DTO.ChiTietHoaDon;
-import DTO.DTOBanPhim;
-import DTO.DTOChiTietNguyenLieu;
-import DTO.DTOChuot;
-import DTO.DTOMonAn;
-import DTO.DTONapTien;
-import DTO.DTONguoiDung;
-import DTO.DTONguyenLieu;
+import DTO.BanPhim;
+import DTO.ChiTietNguyenLieu;
+import DTO.Chuot;
+import DTO.MonAn;
+import DTO.NapTien;
+import DTO.NguoiDung;
+import DTO.NguyenLieu;
 import DTO.HoaDon;
 import DTO.May;
 import DTO.ThanhPhanMonAn;
@@ -57,15 +57,15 @@ public class DAOQuanLy {
         }
         return "Không tồn tại ID";
     }
-    public ArrayList<DTONguoiDung> layDanhSachTaiKhoan() {
+    public ArrayList<NguoiDung> layDanhSachTaiKhoan() {
         String truyVan = "SELECT * FROM TaiKhoan TK, NguoiDung ND, NhomQuyen NQ "+
                         "WHERE TK.IDNguoiDung = ND.IDNguoiDung AND NQ.IDNhomQuyen = TK.IDNhomQuyen";
-        ArrayList<DTONguoiDung> ds = new ArrayList<>();
+        ArrayList<NguoiDung> ds = new ArrayList<>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
             while(rs.next())
-            ds.add(new DTONguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
+            ds.add(new NguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -78,13 +78,13 @@ public class DAOQuanLy {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
             while(rs.next())
-            ds.add(rs.getString("TenNhom"));
+            ds.add(rs.getString("TenNhom").trim());
         } catch (Exception e) {
             System.out.println(e);
         }
         return ds;
     }
-    public String ThemTaiKhoan(DTONguoiDung nguoi) {
+    public String ThemTaiKhoan(NguoiDung nguoi) {
         String sql = "INSERT INTO TaiKhoan (IDTaiKhoan, TenTaiKhoan, MatKhau, SoDu, IDNhomQuyen, NgayTao, TrangThai ,IDNguoiDung) " +
              "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -111,7 +111,7 @@ public class DAOQuanLy {
         }
         return "Thất bại";
     }
-    public String ThemNguoiDung(DTONguoiDung nguoi) {
+    public String ThemNguoiDung(NguoiDung nguoi) {
         String sql = "INSERT INTO NguoiDung (IDNguoiDung, HoTen, NgaySinh, Anh, GioiTinh, SoDienThoai) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
         try {
@@ -192,7 +192,7 @@ public class DAOQuanLy {
         }
         return false;
     }
-    public String suaTaiKhoan(DTONguoiDung nguoiDung) {
+    public String suaTaiKhoan(NguoiDung nguoiDung) {
         String sql = "UPDATE TaiKhoan SET " +
                      "TenTaiKhoan = ?, " +
                      "MatKhau = ?, " +
@@ -226,7 +226,7 @@ public class DAOQuanLy {
         
         return "Thất bại!";
     }
-    public String suaThongTinNguoiDung(DTONguoiDung nguoiDung) {
+    public String suaThongTinNguoiDung(NguoiDung nguoiDung) {
         String sql = "UPDATE NguoiDung SET " +
                      "HoTen = ?, " +
                      "NgaySinh = ?, " +
@@ -258,52 +258,52 @@ public class DAOQuanLy {
         
         return "Thất bại!";
     }
-    public ArrayList<DTONguoiDung> timKiemTaiKhoanTheoHoTen(String hoTen) {
+    public ArrayList<NguoiDung> timKiemTaiKhoanTheoHoTen(String hoTen) {
         String truyVan = "SELECT * FROM TaiKhoan TK, NguoiDung ND, NhomQuyen NQ "+
         "WHERE TK.IDNguoiDung = ND.IDNguoiDung AND NQ.IDNhomQuyen = TK.IDNhomQuyen AND ND.HoTen = ?";
-        ArrayList<DTONguoiDung> ds = new ArrayList<>();
+        ArrayList<NguoiDung> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, hoTen);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
-            ds.add(new DTONguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
+            ds.add(new NguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
         } catch (Exception e) {
             System.out.println(e);
         }
         return ds;
     }
-    public ArrayList<DTONguoiDung> timKiemTaiKhoanTheoTenTaiKhoan(String tenTaiKhoan) {
+    public ArrayList<NguoiDung> timKiemTaiKhoanTheoTenTaiKhoan(String tenTaiKhoan) {
         String truyVan = "SELECT * FROM TaiKhoan TK, NguoiDung ND, NhomQuyen NQ "+
         "WHERE TK.IDNguoiDung = ND.IDNguoiDung AND NQ.IDNhomQuyen = TK.IDNhomQuyen AND TK.TenTaiKhoan = ?";
-        ArrayList<DTONguoiDung> ds = new ArrayList<>();
+        ArrayList<NguoiDung> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, tenTaiKhoan);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
-            ds.add(new DTONguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
+            ds.add(new NguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
         } catch (Exception e) {
             System.out.println(e);
         }
         return ds;
     }
-    public ArrayList<DTONguoiDung> timKiemTaiKhoanTheoSoDienThoai(String sdt) {
+    public ArrayList<NguoiDung> timKiemTaiKhoanTheoSoDienThoai(String sdt) {
         String truyVan = "SELECT * FROM TaiKhoan TK, NguoiDung ND, NhomQuyen NQ "+
         "WHERE TK.IDTaiKhoan = ND.IDTaiKhoan AND NQ.IDNhomQuyen = TK.IDNhomQuyen AND ND.SoDienThoai = ?";
-        ArrayList<DTONguoiDung> ds = new ArrayList<>();
+        ArrayList<NguoiDung> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, sdt);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
-            ds.add(new DTONguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
+            ds.add(new NguoiDung(rs.getString("IDTaiKhoan"), rs.getString("TenTaiKhoan"), rs.getString("MatKhau"), rs.getInt("SoDu"), rs.getString("IDNhomQuyen"), rs.getDate("NgayTao"), rs.getString("IDNguoiDung"), rs.getString("HoTen"), rs.getDate("NgaySinh"), rs.getString("SoDienThoai"),rs.getString("Anh"),rs.getString("GioiTinh"),rs.getString("TrangThai"),rs.getString("TenNhom")));
         } catch (Exception e) {
             System.out.println(e);
         }
         return ds;
     }
-    public boolean ghiThongTinNap(DTONapTien napTien) {
+    public boolean ghiThongTinNap(NapTien napTien) {
         String sql = "INSERT INTO LichSuNapTien (ID, IDTaiKhoan, GiaTriNap, ThoiGian) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -348,15 +348,15 @@ public class DAOQuanLy {
         max+=1;
         return String.valueOf(max);
     }
-    public ArrayList<DTOChuot> layDanhSachChuot() {
-        ArrayList<DTOChuot> danhSachChuot = new ArrayList<>();
+    public ArrayList<Chuot> layDanhSachChuot() {
+        ArrayList<Chuot> danhSachChuot = new ArrayList<>();
         String truyVan = "SELECT * FROM Chuot";
         try {
             PreparedStatement pStatement = con.prepareStatement(truyVan);
             ResultSet rs = pStatement.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOChuot với các tham số từ cơ sở dữ liệu
-                DTOChuot chuot = new DTOChuot(
+                Chuot chuot = new Chuot(
                     rs.getString("IDChuot"),        // ID
                     rs.getString("TenChuot"),       // Ten
                     rs.getInt("TocDoChuot"),     // TocDo
@@ -373,15 +373,15 @@ public class DAOQuanLy {
         }
         return danhSachChuot;
     }
-    public ArrayList<DTOBanPhim> layDanhSachBanPhim() {
-        ArrayList<DTOBanPhim> danhSachBanPhim = new ArrayList<>();
+    public ArrayList<BanPhim> layDanhSachBanPhim() {
+        ArrayList<BanPhim> danhSachBanPhim = new ArrayList<>();
         String truyVan = "SELECT * FROM BanPhim"; // Truy vấn lấy tất cả bàn phím từ cơ sở dữ liệu
         try {
             PreparedStatement pStatement = con.prepareStatement(truyVan);
             ResultSet rs = pStatement.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOBanPhim với các tham số từ cơ sở dữ liệu
-                DTOBanPhim banPhim = new DTOBanPhim(
+                BanPhim banPhim = new BanPhim(
                     rs.getString("IDBanPhim"),    // IDBanPhim
                     rs.getString("TenBanPhim"),   // TenBanPhim
                     rs.getString("IDMay"),        // IDMay
@@ -398,16 +398,16 @@ public class DAOQuanLy {
         }
         return danhSachBanPhim;
     }
-    public ArrayList<DTOChuot> timKiemChuotTheoTen(String ten) {
+    public ArrayList<Chuot> timKiemChuotTheoTen(String ten) {
         String truyVan = "SELECT * FROM Chuot WHERE TenChuot LIKE ?";
-        ArrayList<DTOChuot> ds = new ArrayList<>();
+        ArrayList<Chuot> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, "%" + ten + "%"); // Thêm ký tự % vào trước và sau tên để tìm kiếm theo mẫu
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOChuot với các tham số từ cơ sở dữ liệu
-                DTOChuot chuot = new DTOChuot(
+                Chuot chuot = new Chuot(
                     rs.getString("IDChuot"),        // ID
                     rs.getString("TenChuot"),       // Ten
                     rs.getInt("TocDoChuot"),     // TocDo
@@ -424,16 +424,16 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOChuot> timKiemChuotTheoIDChuot(String idChuot) {
+    public ArrayList<Chuot> timKiemChuotTheoIDChuot(String idChuot) {
         String truyVan = "SELECT * FROM Chuot WHERE IDChuot = ?";
-        ArrayList<DTOChuot> ds = new ArrayList<>();
+        ArrayList<Chuot> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, idChuot); // Tìm kiếm chính xác IDChuot
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOChuot với các tham số từ cơ sở dữ liệu
-                DTOChuot chuot = new DTOChuot(
+                Chuot chuot = new Chuot(
                     rs.getString("IDChuot"),        // ID
                     rs.getString("TenChuot"),       // Ten
                     rs.getInt("TocDoChuot"),     // TocDo
@@ -450,16 +450,16 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOChuot> timKiemChuotTheoIDMay(String idMay) {
+    public ArrayList<Chuot> timKiemChuotTheoIDMay(String idMay) {
         String truyVan = "SELECT * FROM Chuot WHERE IDMay = ?";
-        ArrayList<DTOChuot> ds = new ArrayList<>();
+        ArrayList<Chuot> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, idMay); // Tìm kiếm chính xác IDMay
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOChuot với các tham số từ cơ sở dữ liệu
-                DTOChuot chuot = new DTOChuot(
+                Chuot chuot = new Chuot(
                     rs.getString("IDChuot"),        // ID
                     rs.getString("TenChuot"),       // Ten
                     rs.getInt("TocDoChuot"),     // TocDo
@@ -476,16 +476,16 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOBanPhim> timKiemBanPhimTheoTen(String ten) {
+    public ArrayList<BanPhim> timKiemBanPhimTheoTen(String ten) {
         String truyVan = "SELECT * FROM BanPhim WHERE TenBanPhim LIKE ?";
-        ArrayList<DTOBanPhim> ds = new ArrayList<>();
+        ArrayList<BanPhim> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, "%" + ten + "%"); // Sử dụng LIKE để tìm kiếm tên
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOBanPhim với các tham số từ cơ sở dữ liệu
-                DTOBanPhim banPhim = new DTOBanPhim(
+                BanPhim banPhim = new BanPhim(
                     rs.getString("IDBanPhim"),        // IDBanPhim
                     rs.getString("TenBanPhim"),       // TenBanPhim
                     rs.getString("IDMay"),             // IDMay
@@ -502,16 +502,16 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOBanPhim> timKiemBanPhimTheoIDBanPhim(String idBanPhim) {
+    public ArrayList<BanPhim> timKiemBanPhimTheoIDBanPhim(String idBanPhim) {
         String truyVan = "SELECT * FROM BanPhim WHERE IDBanPhim = ?";
-        ArrayList<DTOBanPhim> ds = new ArrayList<>();
+        ArrayList<BanPhim> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, idBanPhim); // Tìm kiếm chính xác IDBanPhim
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOBanPhim với các tham số từ cơ sở dữ liệu
-                DTOBanPhim banPhim = new DTOBanPhim(
+                BanPhim banPhim = new BanPhim(
                     rs.getString("IDBanPhim"),        // IDBanPhim
                     rs.getString("TenBanPhim"),       // TenBanPhim
                     rs.getString("IDMay"),             // IDMay
@@ -528,16 +528,16 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOBanPhim> timKiemBanPhimTheoIDMay(String idMay) {
+    public ArrayList<BanPhim> timKiemBanPhimTheoIDMay(String idMay) {
         String truyVan = "SELECT * FROM BanPhim WHERE IDMay = ?";
-        ArrayList<DTOBanPhim> ds = new ArrayList<>();
+        ArrayList<BanPhim> ds = new ArrayList<>();
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
             pstmt.setString(1, idMay); // Tìm kiếm chính xác IDMay
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 // Khởi tạo đối tượng DTOBanPhim với các tham số từ cơ sở dữ liệu
-                DTOBanPhim banPhim = new DTOBanPhim(
+                BanPhim banPhim = new BanPhim(
                     rs.getString("IDBanPhim"),        // IDBanPhim
                     rs.getString("TenBanPhim"),       // TenBanPhim
                     rs.getString("IDMay"),             // IDMay
@@ -590,7 +590,7 @@ public class DAOQuanLy {
             return "Lỗi khi xóa bàn phím: " + e.getMessage();
         }
     }
-    public String suaChuot(DTOChuot chuot) {
+    public String suaChuot(Chuot chuot) {
         System.out.println(chuot.getTocDoChuot());
         String truyVan = "UPDATE Chuot SET TenChuot = ?, TocDoChuot = ?, TinhTrang = ?, IDMay = ?, HinhAnh = ?, MoTa = ? WHERE IDChuot = ?";
         try {
@@ -619,7 +619,7 @@ public class DAOQuanLy {
             return "Lỗi khi cập nhật chuột: " + e.getMessage();
         }
     }
-    public String suaBanPhim(DTOBanPhim banPhim) {
+    public String suaBanPhim(BanPhim banPhim) {
         String truyVan = "UPDATE BanPhim SET TenBanPhim = ?, IDMay = ?, Led = ?, TinhTrang = ?, HinhAnh = ?, MoTa = ? WHERE IDBanPhim = ?";
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
@@ -647,7 +647,7 @@ public class DAOQuanLy {
             return "Lỗi khi cập nhật bàn phím: " + e.getMessage();
         }
     }
-    public String themBanPhim(DTOBanPhim banPhim) {
+    public String themBanPhim(BanPhim banPhim) {
         String truyVan = "INSERT INTO BanPhim (IDBanPhim, TenBanPhim, IDMay, Led, TinhTrang, HinhAnh, MoTa) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
@@ -673,7 +673,7 @@ public class DAOQuanLy {
             return "Lỗi khi thêm bàn phím: " + e.getMessage();
         }
     }
-    public String themChuot(DTOChuot chuot) {
+    public String themChuot(Chuot chuot) {
         String truyVan = "INSERT INTO Chuot (IDChuot, TenChuot, TocDo, TinhTrang, IDMay, HinhAnh, MoTa) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
@@ -745,7 +745,7 @@ public class DAOQuanLy {
         max += 1; // Tăng mã lên 1 để lấy mã tiếp theo
         return max;
     }
-    public String themNChuot(DTOChuot chuot, int soLuong) {
+    public String themNChuot(Chuot chuot, int soLuong) {
         String truyVan = "INSERT INTO Chuot (IDChuot, TenChuot, TocDoChuot, TinhTrang, IDMay, HinhAnh, MoTa) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String result = "Thành công";
         int ma = layMaChuotChuaTonTai();
@@ -774,7 +774,7 @@ public class DAOQuanLy {
     
         return result;
     }
-    public String themNBanPhim(DTOBanPhim banPhim, int soLuong) {
+    public String themNBanPhim(BanPhim banPhim, int soLuong) {
         String truyVan = "INSERT INTO BanPhim (IDBanPhim, TenBanPhim, IDMay, Led, TinhTrang, HinhAnh, MoTa) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String result = "Thành công";
         int ma = layMaBanPhimChuaTonTai(); // Assuming this method gets the next available ID for BanPhim
@@ -803,14 +803,14 @@ public class DAOQuanLy {
     
         return result;
     }
-    public ArrayList<DTONguyenLieu> layDanhSachNguyenLieu() {
+    public ArrayList<NguyenLieu> layDanhSachNguyenLieu() {
         String truyVan = "SELECT * FROM NguyenLieu NL";
-        ArrayList<DTONguyenLieu> ds = new ArrayList<>();
+        ArrayList<NguyenLieu> ds = new ArrayList<>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
             while (rs.next()) {
-                ds.add(new DTONguyenLieu(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi"), rs.getString("Anh")));
+                ds.add(new NguyenLieu(rs.getString("IDNguyenLieu"), rs.getString("TenNguyenLieu"), rs.getString("DonVi"), rs.getString("Anh")));
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -833,7 +833,7 @@ public class DAOQuanLy {
         }
         return soLuong;
     }
-    public String themNguyenLieu(DTONguyenLieu nguyenLieu) {
+    public String themNguyenLieu(NguyenLieu nguyenLieu) {
         String sql = "INSERT INTO NguyenLieu (IDNguyenLieu, TenNguyenLieu, DonVi, Anh) VALUES (?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -888,8 +888,8 @@ public class DAOQuanLy {
         max += 1; // Tăng max lên 1 để lấy mã tiếp theo
         return String.valueOf(max); // Trả về mã nguyên liệu tiếp theo dưới dạng String
     }
-    public ArrayList<DTONguyenLieu> timKiemNguyenLieu(String tenNguyenLieu) {
-        ArrayList<DTONguyenLieu> danhSachNguyenLieu = new ArrayList<>();
+    public ArrayList<NguyenLieu> timKiemNguyenLieu(String tenNguyenLieu) {
+        ArrayList<NguyenLieu> danhSachNguyenLieu = new ArrayList<>();
         String truyVan = "SELECT * FROM NguyenLieu WHERE TenNguyenLieu LIKE ?";
         
         try {
@@ -904,7 +904,7 @@ public class DAOQuanLy {
                 String donVi = rs.getString("DonVi");
                 String anh = rs.getString("Anh");
                 
-                DTONguyenLieu nguyenLieu = new DTONguyenLieu(idNguyenLieu, ten, donVi, anh);
+                NguyenLieu nguyenLieu = new NguyenLieu(idNguyenLieu, ten, donVi, anh);
                 danhSachNguyenLieu.add(nguyenLieu); // Thêm vào danh sách
             }
         } catch (SQLException e) {
@@ -912,24 +912,24 @@ public class DAOQuanLy {
         }
         return danhSachNguyenLieu; // Trả về danh sách nguyên liệu tìm được
     }
-    public ArrayList<DTOChiTietNguyenLieu> layThongTinLoNguyenLieu(String IDNguyenLieu) {
+    public ArrayList<ChiTietNguyenLieu> layThongTinLoNguyenLieu(String IDNguyenLieu) {
         String truyVan = "SELECT * \n" + //
                         "FROM ChiTietNguyenLieu \n" + //
                         "WHERE IDNguyenLieu = ? \n" + //
                         "ORDER BY NgayNhap DESC;";
-        ArrayList <DTOChiTietNguyenLieu> ds = new ArrayList<>();
+        ArrayList <ChiTietNguyenLieu> ds = new ArrayList<>();
         try {
             PreparedStatement stmt = con.prepareStatement(truyVan);
             stmt.setString(1, IDNguyenLieu);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()) 
-            ds.add(new DTOChiTietNguyenLieu(IDNguyenLieu, rs.getDate("NgayNhap"), rs.getInt("HanSuDung"), rs.getInt("SoLuong"), rs.getInt("DaSuDung")));
+            ds.add(new ChiTietNguyenLieu(IDNguyenLieu, rs.getDate("NgayNhap"), rs.getInt("HanSuDung"), rs.getInt("SoLuong"), rs.getInt("DaSuDung")));
         } catch (Exception e) {
             System.out.println("Lỗi truy vấn: " + e.getMessage());
         }
         return ds;
     }
-    public String NhapNguyenLieu(DTOChiTietNguyenLieu nl, String id) {
+    public String NhapNguyenLieu(ChiTietNguyenLieu nl, String id) {
         String truyVan = "INSERT INTO ChiTietNguyenLieu (ID,IDNguyenLieu, SoLuong, NgayNhap, HanSuDung, DaSuDung) VALUES (? , ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pstmt = con.prepareStatement(truyVan);
@@ -974,9 +974,9 @@ public class DAOQuanLy {
         max += 1; // Tăng mã lên 1 để tạo mã mới
         return String.valueOf(max); // Trả về mã loại mới
     }
-    public ArrayList<DTOMonAn> layDanhSachMonAn() {
+    public ArrayList<MonAn> layDanhSachMonAn() {
         String truyVan = "SELECT IDMon, TenMon, GiaTien, HinhAnh, TrangThai FROM Menu";
-        ArrayList<DTOMonAn> ds = new ArrayList<>();
+        ArrayList<MonAn> ds = new ArrayList<>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
@@ -987,7 +987,7 @@ public class DAOQuanLy {
                 String hinhAnh = rs.getString("HinhAnh").trim();
                 String trangThai = rs.getString("TrangThai").trim();
 
-                DTOMonAn monAn = new DTOMonAn(id, tenMonAn, giaTien, hinhAnh, trangThai);
+                MonAn monAn = new MonAn(id, tenMonAn, giaTien, hinhAnh, trangThai);
                 ds.add(monAn);
             }
         } catch (Exception e) {
@@ -995,8 +995,8 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public ArrayList<DTOMonAn> timKiemMonAn(String tenMonAn) {
-        ArrayList<DTOMonAn> danhSachMonAn = new ArrayList<>();
+    public ArrayList<MonAn> timKiemMonAn(String tenMonAn) {
+        ArrayList<MonAn> danhSachMonAn = new ArrayList<>();
         String truyVan = "SELECT * FROM Menu WHERE TenMon LIKE ?";
         
         try {
@@ -1012,7 +1012,7 @@ public class DAOQuanLy {
                 String hinhAnh = rs.getString("HinhAnh");
                 String trangThai = rs.getString("TrangThai");
                 
-                DTOMonAn monAn = new DTOMonAn(id, ten, giaTien, hinhAnh, trangThai);
+                MonAn monAn = new MonAn(id, ten, giaTien, hinhAnh, trangThai);
                 danhSachMonAn.add(monAn); // Thêm vào danh sách
             }
         } catch (SQLException e) {
@@ -1092,7 +1092,7 @@ public class DAOQuanLy {
         max += 1;
         return String.valueOf(max);
     }
-    public String themMonAn(DTOMonAn monAn) {
+    public String themMonAn(MonAn monAn) {
         String truyVan = "INSERT INTO Menu (IDMon, TenMon, GiaTien, HinhAnh, TrangThai) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement stmt = con.prepareStatement(truyVan);
@@ -1449,9 +1449,9 @@ public class DAOQuanLy {
         }
         return ds;
     }
-    public DTOChuot layChuotCuaMay(String idMay) {
+    public Chuot layChuotCuaMay(String idMay) {
         String truyVan = "SELECT * FROM Chuot WHERE IDMay = ?";
-        DTOChuot chuot = new DTOChuot();
+        Chuot chuot = new Chuot();
         try {
             PreparedStatement stmt = con.prepareStatement(truyVan);
             stmt.setString(1, idMay);
@@ -1470,9 +1470,9 @@ public class DAOQuanLy {
         }
         return chuot;
     }
-    public DTOBanPhim layBanPhimCuaMay(String idMay) {
+    public BanPhim layBanPhimCuaMay(String idMay) {
         String truyVan = "SELECT * FROM BanPhim WHERE IDMay = ?";
-        DTOBanPhim banPhim = new DTOBanPhim();
+        BanPhim banPhim = new BanPhim();
         try {
             PreparedStatement stmt = con.prepareStatement(truyVan);
             stmt.setString(1, idMay);
@@ -1550,14 +1550,14 @@ public class DAOQuanLy {
         }
         return "Thất bại";
     }
-    public ArrayList<DTOChuot> layDanhSachChuotChuaLap() {
+    public ArrayList<Chuot> layDanhSachChuotChuaLap() {
         String truyVan = "SELECT * FROM Chuot WHERE IDMay IS NULL AND TinhTrang = N'Tốt'";
-        ArrayList<DTOChuot> ds = new ArrayList<>();
+        ArrayList<Chuot> ds = new ArrayList<>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
             while(rs.next()) {
-                DTOChuot chuot = new DTOChuot(
+                Chuot chuot = new Chuot(
                     rs.getString("IDChuot"),        // ID
                     rs.getString("TenChuot"),       // Ten
                     rs.getInt("TocDoChuot"),     // TocDo
@@ -1586,14 +1586,14 @@ public class DAOQuanLy {
         }
         return "Thất bại";
     }
-    public ArrayList<DTOBanPhim> layDanhSachBanPhimChuaLap() {
+    public ArrayList<BanPhim> layDanhSachBanPhimChuaLap() {
         String truyVan = "SELECT * FROM BanPhim WHERE IDMay IS NULL AND TinhTrang = N'Tốt'";
-        ArrayList<DTOBanPhim> ds = new ArrayList<>();
+        ArrayList<BanPhim> ds = new ArrayList<>();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(truyVan);
             while(rs.next()) {
-                DTOBanPhim banPhim = new DTOBanPhim(
+                BanPhim banPhim = new BanPhim(
                     rs.getString("IDBanPhim"),    // IDBanPhim
                     rs.getString("TenBanPhim"),   // TenBanPhim
                     rs.getString("IDMay"),        // IDMay

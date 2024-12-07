@@ -3,7 +3,7 @@ package GUI;
 import javax.swing.*;
 
 import BLL.BLLNet;
-import DTO.DTOChiTietNguyenLieu;
+import DTO.ChiTietNguyenLieu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -23,6 +23,7 @@ public class NhapNguyenLieu extends JFrame {
                 isClosed = true;
             }
         });
+        setLocationRelativeTo(null);
         setTitle("Nhập nguyên liệu");
         setSize(400, 300);
         setLayout(null);
@@ -85,7 +86,7 @@ public class NhapNguyenLieu extends JFrame {
 
         // Button lưu
         JButton btnXacNhan = new JButton("Xác nhận");
-        btnXacNhan.setBounds(150, 180, 80, 30);
+        btnXacNhan.setBounds(135, 180, 120, 30);
         add(btnXacNhan);
         btnXacNhan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -119,7 +120,7 @@ public class NhapNguyenLieu extends JFrame {
                     JOptionPane.showMessageDialog(null, "Hạn sử dụng không hợp lệ!");
                     return;
                 }
-                DTOChiTietNguyenLieu chiTietNguyenLieu = new DTOChiTietNguyenLieu(IDNguyenLieu, date, hanSuDung, soLuong,0);
+                ChiTietNguyenLieu chiTietNguyenLieu = new ChiTietNguyenLieu(IDNguyenLieu, date, hanSuDung, soLuong,0);
                 String s = chiTietNguyenLieu.kiemTraHopLe();
                 if(!s.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, s);

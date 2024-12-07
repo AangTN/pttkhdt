@@ -1,12 +1,12 @@
 package DTO;
-public class DTOBanPhim extends ThietBi {
+public class BanPhim extends ThietBi {
     private String Led;
     // Constructor with parameters
-    public DTOBanPhim(String IDBanPhim, String TenBanPhim, String IDMay, String Led, String TinhTrang, String HinhAnh, String MoTa) {
+    public BanPhim(String IDBanPhim, String TenBanPhim, String IDMay, String Led, String TinhTrang, String HinhAnh, String MoTa) {
         super(IDBanPhim, TenBanPhim, TinhTrang, IDMay, HinhAnh, MoTa);
         this.Led = Led;
     }
-    public DTOBanPhim(){
+    public BanPhim(){
         Led = "";
     }
     // Getter and Setter methods

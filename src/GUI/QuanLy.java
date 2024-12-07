@@ -18,6 +18,7 @@ public class QuanLy extends JFrame implements ActionListener {
         IDTaiKhoan = iDTaiKhoan;
     }
     public QuanLy(String IDTaiKhoan, BLLNet bllNet) {
+        setTitle("Quản lý");
         setSize(1900,1000);
         setLocationRelativeTo(null);
         setIDTaiKhoan(IDTaiKhoan);
@@ -36,12 +37,12 @@ public class QuanLy extends JFrame implements ActionListener {
         JLabel lbLogo = new JLabel(logo2);
         lbLogo.setBounds(80,10,200,180);
         pnTrai.add(lbLogo);
-        JLabel lbQuanNet = new JLabel("QUẢN LÝ QUÁN NET");
-        lbQuanNet.setFont(new Font("Arial", Font.BOLD, 24));
-        lbQuanNet.setForeground(Color.WHITE);
-        lbQuanNet.setHorizontalAlignment(SwingConstants.CENTER);
-        lbQuanNet.setBounds(0, 220, 400, 30);
-        pnTrai.add(lbQuanNet);
+        JLabel lbQuanLy = new JLabel("QUẢN LÝ QUÁN NET");
+        lbQuanLy.setFont(new Font("Arial", Font.BOLD, 24));
+        lbQuanLy.setForeground(Color.WHITE);
+        lbQuanLy.setHorizontalAlignment(SwingConstants.CENTER);
+        lbQuanLy.setBounds(0, 220, 400, 30);
+        pnTrai.add(lbQuanLy);
 
         ArrayList<String> dsQuyen = new ArrayList<>();
         dsQuyen = bllNet.layDanhSachQuyen(IDTaiKhoan);

@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -13,10 +15,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import BLL.BLLNet;
-import DTO.DTOChuot;
+import DTO.Chuot;
 
 public class LapChuot extends JFrame {
-    private ArrayList<DTOChuot> danhSachChuotChuaLap = new ArrayList<>();
+    private ArrayList<Chuot> danhSachChuotChuaLap = new ArrayList<>();
     private BLLNet bllNet;
     private boolean isClosed = false;
 
@@ -24,6 +26,13 @@ public class LapChuot extends JFrame {
         return isClosed; // Phương thức để kiểm tra trạng thái
     }
     public LapChuot(BLLNet net, String idMay) {
+        setTitle("Lắp chuột");
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isClosed = true;
+            }
+        });
         setSize(700, 600);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -51,7 +60,7 @@ public class LapChuot extends JFrame {
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18)); // Font tiêu đề
 
         // Thêm dữ liệu vào bảng
-        for (DTOChuot chuot : danhSachChuotChuaLap) {
+        for (Chuot chuot : danhSachChuotChuaLap) {
             ImageIcon icon = new ImageIcon(
                 new ImageIcon(chuot.getHinhAnh())
                     .getImage()
@@ -99,6 +108,9 @@ public class LapChuot extends JFrame {
         btLap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
+                if(row <= 0) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn chuột để lắp");
+                }
                 String idChuot = danhSachChuotChuaLap.get(row).getId();
                 JOptionPane.showMessageDialog(null,bllNet.lapChuot(idChuot, idMay));
                 isClosed = true;

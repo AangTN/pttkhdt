@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import DTO.DTOMonAn;
+import DTO.MonAn;
 import DTO.ThanhPhanMonAn;
 import BLL.BLLNet;
 
@@ -21,10 +21,10 @@ public class SuaThongTinMonAn extends JFrame {
     private DefaultTableModel model;
     private JRadioButton rbKhoa, rbKhongKhoa;
     private JButton btnLuu;
-    private DTOMonAn monAn;
+    private MonAn monAn;
     private JLabel lbAnhDaiDien;
     private JTable bangNguyenLieu;
-    public void setMonAn(DTOMonAn monAn) {
+    public void setMonAn(MonAn monAn) {
         this.monAn = monAn;
     }
     public void setBllNet(BLLNet bllNet) {
@@ -34,7 +34,7 @@ public class SuaThongTinMonAn extends JFrame {
     public boolean isClosed() {
         return isClosed;
     }
-    public SuaThongTinMonAn(BLLNet net, DTOMonAn mon) {
+    public SuaThongTinMonAn(BLLNet net, MonAn mon) {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -65,6 +65,7 @@ public class SuaThongTinMonAn extends JFrame {
         tfTenMon = new JTextField();
         tfTenMon.setBounds(300, 10, 450, 30); // Tăng kích thước text field
         tfTenMon.setText(monAn.getTenMonAn());
+        tfTenMon.setEditable(false);
         add(tfTenMon);
 
         JLabel lbGiaTien = new JLabel("Giá tiền:");
@@ -164,7 +165,7 @@ public class SuaThongTinMonAn extends JFrame {
                 String trangThai;
                 if(rbKhoa.isSelected()) trangThai = "Khóa";
                 else trangThai = "Không khóa";
-                DTOMonAn monAnCon = new DTOMonAn("NULL", tenMonAn, giaTien, monAn.getHinhAnh(), trangThai);
+                MonAn monAnCon = new MonAn("NULL", tenMonAn, giaTien, monAn.getHinhAnh(), trangThai);
                 String kiemTraThongTinMonAn = monAnCon.kiemTraHopLeMonAn();
                 if(!kiemTraThongTinMonAn.equals("Hợp lệ")) {
                     JOptionPane.showMessageDialog(null, kiemTraThongTinMonAn);
